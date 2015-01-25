@@ -51,32 +51,32 @@ require('header.php');
                 </div>
             </div>
 
-<script type="text/javascript">
-            // Setup
-            this.$('.js-loading-bar').modal({
-              backdrop: 'static',
-              show: false
-            });
+            <script type="text/javascript">
+                        // Setup
+                        this.$('.js-loading-bar').modal({
+                          backdrop: 'static',
+                          show: false
+                        });
 
-            $(document).ready(function() {
-              var $modal = $('.js-loading-bar'),
-                  $bar = $modal.find('.progress-bar');
-              
-              $modal.modal('show');
-              $bar.addClass('animate');
+                        $(document).ready(function() {
+                          var $modal = $('.js-loading-bar'),
+                              $bar = $modal.find('.progress-bar');
+                          
+                          $modal.modal('show');
+                          $bar.addClass('animate');
 
-              setTimeout(function() {
-                $bar.removeClass('animate');
-                $modal.modal('hide');
-              }, 3500);
+                          setTimeout(function() {
+                            $bar.removeClass('animate');
+                            $modal.modal('hide');
+                          }, 3500);
 
-            });
-              setTimeout(function(){ 
-                          alertify.set({ delay: 2500 });
-                          alertify.success("Tree Construction Done!");
-              }, 3800);
+                        });
+                          setTimeout(function(){ 
+                                      alertify.set({ delay: 2500 });
+                                      alertify.success("Tree Construction Done!");
+                          }, 3800);
 
-</script>
+            </script>
 
 
             <!-- Right side column. Contains the navbar and content of the page -->
