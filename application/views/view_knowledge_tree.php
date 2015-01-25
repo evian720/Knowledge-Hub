@@ -28,14 +28,55 @@ require('header.php');
     stroke-width: 1.5px;
   }
 
+  .progress-bar.animate {
+    width: 100%;
+  }
+
 </style>
 
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
 
+            <!-- loading.... -->
+            <div class="modal js-loading-bar">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">Tree Constructing...</div>
+                        <div class="modal-body">
+                            <div class="progress bg progress-striped active">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+<script type="text/javascript">
+            // Setup
+            this.$('.js-loading-bar').modal({
+              backdrop: 'static',
+              show: false
+            });
 
+            $(document).ready(function() {
+              var $modal = $('.js-loading-bar'),
+                  $bar = $modal.find('.progress-bar');
+              
+              $modal.modal('show');
+              $bar.addClass('animate');
 
+              setTimeout(function() {
+                $bar.removeClass('animate');
+                $modal.modal('hide');
+              }, 3500);
+
+            });
+              setTimeout(function(){ 
+                          alertify.set({ delay: 2500 });
+                          alertify.success("Tree Construction Done!");
+              }, 3800);
+
+</script>
 
 
             <!-- Right side column. Contains the navbar and content of the page -->
@@ -63,12 +104,28 @@ require('header.php');
 
                   <div class="box box-info">
                     <div class="box-header">
-                      <h3 class="box-title"><i class="glyphicon glyphicon-tree-conifer"></i></h3>
+
+                      <div class="box-tools pull-left">
+                        <input type="checkbox" id="view_choice" data-offstyle="success" data-onstyle="primary" checked>
+                      </div>
+
                       <div class="box-tools pull-right">
                         <div class="label bg-aqua">Updated</div>
                       </div>
                     </div>
-                    <div class="box-body" id="mytree">
+                    <div class="box-body" id="mytree1">
+                      <!-- Custom Tabs -->
+                      <div class="nav-tabs-custom">
+                        <div class="tab-content" id="tt2">
+                          <div class="tab-pane active" id="tab_1">
+                            <div id="mytree"></div>
+                          </div>
+                          <div class="tab-pane" id="tab_2">
+                            content view!
+                          </div><!-- /.tab-pane -->
+                        </div><!-- /.tab-content -->
+                      </div><!-- nav-tabs-custom -->
+
 
 
                     </div><!-- /.box-body -->
@@ -76,30 +133,6 @@ require('header.php');
                       <code>End of the Tree</code>
                     </div><!-- /.box-footer-->
                   </div><!-- /.box -->
-
-
-
-
-                    <!-- Custom Tabs -->
-                    <div class="nav-tabs-custom">
-                      <ul class="nav nav-tabs">
-                        <li class="active" id="tab_selection1"><a href="#tab_1" data-toggle="tab">Tab 1</a></li>
-                        <li class="" id="tab_selection2"><a href="#tab_2" data-toggle="tab">Tab 2</a></li>
-                        <li class="col-sm-4 pull-right">
-                          <input type="checkbox" id="view_choice" data-offstyle="success" data-onstyle="primary" checked>
-                        </li>
-                      </ul>
-
-
-                      <div class="tab-content">
-                        <div class="tab-pane" id="tab_1">
-                          Tree View
-                        </div><!-- /.tab-pane -->
-                        <div class="tab-pane active" id="tab_2">
-                          content view
-                        </div><!-- /.tab-pane -->
-                      </div><!-- /.tab-content -->
-                    </div><!-- nav-tabs-custom -->
 
 
 
@@ -116,10 +149,12 @@ require('footer.php');
 
 
 <script>  
+
   $(function() {
     $('#view_choice').bootstrapToggle({
       on: 'Tree',
-      off: 'Directory'
+      off: 'Directory',
+      size: 'small'
     })
   })
 
@@ -300,10 +335,6 @@ require('footer.php');
     return lines
   }
 
-  $(document).ready(function() {
-    alertify.set({ delay: 2500 });
-    alertify.success("Tree Construction Done!");
-  });
 
   </script>
 

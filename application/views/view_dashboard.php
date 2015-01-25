@@ -5,7 +5,6 @@
 require('header.php');
 ?>
 
-
             <!-- Right side column. Contains the navbar and content of the page -->
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
@@ -24,7 +23,6 @@ require('header.php');
                 <section class="content">
 
 
-
                 </section><!-- /.content -->
 
 <?php
@@ -33,6 +31,9 @@ require('footer.php');
                 
             </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->
+
+
+
 
 </body>
 

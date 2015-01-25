@@ -1178,6 +1178,9 @@ body > .header .logo .icon {
 --------------------------------
 */
 /* size variation */
+.progress.bg {
+  height: 20px;
+}
 .progress.sm {
   height: 10px;
 }

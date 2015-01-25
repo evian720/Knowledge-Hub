@@ -192,7 +192,7 @@
                         </li>
 
                         <li>
-                            <a href="<?php echo base_url() . 'index.php/main/view_tree' ?>"><i class="glyphicon glyphicon-tree-conifer"></i> View My Tree</a>
+                            <a href="<?php echo base_url() . 'index.php/main/view_tree' ?>" id="load"><i class="glyphicon glyphicon-tree-conifer"></i> View My Tree</a>
                         </li>
 
                         <li>
@@ -225,7 +225,6 @@
                     </div>
                 </div>
             </div>
-
 
         <script>
         $("#for_hidden_top").autoHidingNavbar();
