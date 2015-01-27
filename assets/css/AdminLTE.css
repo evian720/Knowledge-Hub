@@ -601,6 +601,9 @@ body > .header .logo .icon {
   .navbar .navbar-right {
     float: right;
   }
+  .navbar .navbar-left {
+    float: left;
+  }
 }
 @media screen and (max-width: 560px) {
   body > .header {
@@ -1402,7 +1405,7 @@ body > .header .logo .icon {
   border-top-color: #00a65a;
 }
 .box.height-control .box-body {
-  max-height: 300px;
+  max-height: 600px;
   overflow: auto;
 }
 .box .box-header {
@@ -1479,6 +1482,7 @@ body > .header .logo .icon {
 .box .box-body > .chart svg,
 .box .box-body > .chart canvas {
   width: 100%!important;
+  height: 1000px;
 }
 .box .box-body .fc {
   margin-top: 5px;

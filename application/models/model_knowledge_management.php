@@ -549,6 +549,12 @@
 					);
 				$this->db->insert('user_category', $insert_level4_data);
 			}
+
+			//increase knowledge sharing count
+			$new_count = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row()->count + 1;
+			$this->db->where('knowledge_id', $knowledge_request->knowledge_id);
+			$this->db->update('knowledge', array('count' => $new_count));
+
 		}
 
 		public function reject_knowledge_request($knowledge_request_id){
@@ -556,6 +562,14 @@
 			$this->db->update('knowledge_request', array('read' => 1));
 		}
 		
+		public function get_knowledge_for_tree_by_cat($cat_name, $user_name){
+			$cat_name = str_replace("%20", " ", $cat_name);
+			$this->db->select('*');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
+			$this->db->where(array('user_knowledge.level4_cat' => $cat_name, 'user_knowledge.user_name' => $user_name));
+			return $this->db->get()->result();
+		}
 
 
 	}//end of the class

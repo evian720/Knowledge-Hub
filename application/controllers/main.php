@@ -17,14 +17,9 @@ class Main extends CI_Controller {
 //=================================================================================================================
 //=================================================================================================================
 
-	public function uitesting(){
-		$this->load->view('header');
-	}
-
 	public function login(){
 		$this->load->model('model_knowledge_management');
 		$data['major_selection'] = $this->model_knowledge_management->get_all_major();
-
 
 
 		if($this->session->userdata('is_logged_in') == 1 && $this->session->userdata('user_role') == 'student' ){
@@ -49,7 +44,6 @@ class Main extends CI_Controller {
 		else{
 			$this->load->view('view_login', $data);
 		}
-		
 	}
 
 	public function dashboard(){
@@ -60,7 +54,15 @@ class Main extends CI_Controller {
 		else{
 			$this->load->view('restricted');
 		}
-		
+	}
+
+	public function teacher_dashboard(){
+		if($this->session->userdata('is_logged_in')){
+			$this->load->view('view_teacher_dashboard');
+		}
+		else{
+			$this->load->view('restricted');
+		}
 	}
 
 	public function logout(){
@@ -93,7 +95,8 @@ class Main extends CI_Controller {
 					'is_logged_in' => 1,
 					'firstname' => $this->model_users->getFirstname($this->input->post('email')),
 					'major' => $this->model_users->get_user_major($this->input->post('email')),
-					'user_role' => $this->model_users->get_user_role($this->input->post('email'))
+					'user_role' => $this->model_users->get_user_role($this->input->post('email')),
+					'just_login' => 1
 				);
 			
 			$this->session->set_userdata($data);
@@ -202,10 +205,9 @@ class Main extends CI_Controller {
 		}
 	}
 
-	public function teacher_dashboard(){
-		$this->load->view('teacher_dashboard');
+	public function update_just_login(){
+		$this->session->set_userdata(array('just_login' => 0));
 	}
-
 
 //=================================================================================================================
 //=================================================================================================================
@@ -508,6 +510,27 @@ class Main extends CI_Controller {
 		
 	}
 	// end of request system
+
+	public function get_knowledge_for_tree_by_cat($cat_name){
+		$this->load->model('model_knowledge_management');
+		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_for_tree_by_cat($cat_name, $this->session->userdata('email'));
+		$this->load->view('view_update_directory_knowledge', $data);
+	}
+
+
+
+
+//=================================================================================================================
+//=================================================================================================================
+//																												  #
+//												Teacher Functions   											  #
+//																												  #
+//=================================================================================================================
+//=================================================================================================================	
+
+	public function view_teacher_standard_tree(){
+		$this->load->view('view_teacher_standard_tree');
+	}
 	
 	
 	

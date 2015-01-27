@@ -55,6 +55,7 @@ require('header.php');
                                                     <span class="btn-group">
                                                         <a href="#" class="btn btn-small"><i class="fa fa-search"></i></a>
                                                         <a href="#" class="btn btn-small"><i class="fa fa-paint-brush"></i></a>
+                                                        <a href="#" class="btn btn-small"><i class="fa fa-plus"></i></a>
                                                     </span>
                                                 </td>
                                             </tr>

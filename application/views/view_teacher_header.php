@@ -34,7 +34,7 @@
 
 
     </head>
-    <body class="skin-black fixed">
+    <body class="skin-blue fixed">
         <!-- header logo: style can be found in header.less -->
         <header class="header">
             <a href="<?=base_url()?>" class="logo">
@@ -52,7 +52,7 @@
                 </a>
                 <div class="navbar-left">
                     <ul class="nav navbar-nav">
-                        <li class="user user-menu"><a><i class="fa fa-users"></i><span>Student View</span></a></li>
+                        <li class="user user-menu"><a><i class="fa fa-graduation-cap"></i><span>Teacher View</span></a></li>
                     </ul>
                 </div>
                 <div class="navbar-right">
@@ -127,7 +127,7 @@
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue" style="height: 100px;">
                                     <p>
-                                        <?php echo $this->session->userdata('firstname')?> - Student
+                                        <?php echo $this->session->userdata('firstname')?> - Teacher
                                         <small>Start Knowledge Hub @ </small>
                                     </p>
                                 </li>
@@ -155,7 +155,7 @@
                     <div class="user-panel">
                         <div class="pull-left info">
                             <p>Hello, <?php echo $this->session->userdata('firstname')?></p>
-                            <a><i class="fa fa-thumbs-up"></i> Start to lean some stuff!</a>
+                            <a><i class="fa fa-thumbs-up"></i> Thanks for all your effort!</a>
                         </div>
                     </div>
                     <!-- search form -->
@@ -197,7 +197,7 @@
                         </li>
 
                         <li>
-                            <a href="<?php echo base_url() . 'index.php/main/view_tree' ?>"><i class="glyphicon glyphicon-tree-conifer"></i> View My Tree</a>
+                            <a href="<?php echo base_url() . 'index.php/main/view_teacher_standard_tree' ?>"><i class="glyphicon glyphicon-tree-conifer"></i> Standard Tree</a>
                         </li>
 
                         <li>
@@ -231,10 +231,6 @@
                 </div>
             </div>
 
-            <!-- just show the welcome once -->
-            <input type="hidden" id="just_login" value="<?php echo $this->session->userdata('just_login'); ?>" />
-
-
         <script>
         $("#for_hidden_top").autoHidingNavbar();
 
@@ -248,67 +244,8 @@
               });
         });
 
-          $(document).ready(function() {
-              $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/refresh_header_count/", //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                  $("#badge_count").text(data);
-                  if(data >= 0){
-                    update_notification();
-                  }
-                }
-              });
-              
-            setInterval(function(){ 
-              // ajax
-              $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/refresh_header_count/", //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                  $("#badge_count").text(data);
-                  if(data >= 0){
-                    update_notification();
-                  }
-                }
-              });
-            }, 5000);
-          });
 
-          function update_notification(){
-              $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/refresh_header_details/", //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                    $('#notification_section').html(data);
-                }
-              });
-          }
-          
-          function accept_request(knowledge_request_id){
-                $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/accept_knowledge_request/" + knowledge_request_id, //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                    alertify.success("Request Accepted");
-                    update_notification();
-                }
-              });
-          }
-          
-          function reject_request(knowledge_request_id){
-            $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/reject_knowledge_request/" + knowledge_request_id, //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                    alertify.error("Request Rejected!");
-                    update_notification();
-                }
-              });
-          }
-
-
-          if($('#just_login').val() == 1 ){
+        if($('#just_login').val() == 1 ){
             setTimeout(function(){ 
                                       alertify.set({ delay: 2500 });
                                       alertify.success("welcome to Knowledge Hub!");
