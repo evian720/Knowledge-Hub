@@ -283,93 +283,93 @@
 
 
 
-  <script type="text/javascript">
-    $('#knowledge_desc').wysihtml5();
-    $('#knowledge_item_desc').wysihtml5();
-    
-    $(document).ready(function() {
-      // The maximum number of options
-      var MAX_OPTIONS = 10;
+<script type="text/javascript">
+$('#knowledge_desc').wysihtml5();
+$('#knowledge_item_desc').wysihtml5();
 
-      $('#knowledgeinputform')
-      .bootstrapValidator({
-        feedbackIcons: {
-          valid: 'glyphicon glyphicon-ok',
-          invalid: 'glyphicon glyphicon-remove',
-          validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-          question: {
-            validators: {
-              notEmpty: {
-                message: 'The question required and cannot be empty'
-              }
-            }
-          },
-          'option[]': {
-            validators: {
-              notEmpty: {
-                message: 'The option required and cannot be empty'
-              },
-              stringLength: {
-                max: 100,
-                message: 'The option must be less than 100 characters long'
-              }
-            }
-          }
+$(document).ready(function() {
+// The maximum number of options
+var MAX_OPTIONS = 10;
+
+$('#knowledgeinputform')
+.bootstrapValidator({
+  feedbackIcons: {
+    valid: 'glyphicon glyphicon-ok',
+    invalid: 'glyphicon glyphicon-remove',
+    validating: 'glyphicon glyphicon-refresh'
+  },
+  fields: {
+    question: {
+      validators: {
+        notEmpty: {
+          message: 'The question required and cannot be empty'
         }
-      })
+      }
+    },
+    'option[]': {
+      validators: {
+        notEmpty: {
+          message: 'The option required and cannot be empty'
+        },
+        stringLength: {
+          max: 100,
+          message: 'The option must be less than 100 characters long'
+        }
+      }
+    }
+  }
+})
 
-          // Add button click handler
-          .on('click', '.addButton', function() {
-            var $template = $('#optionTemplate'),
-            $clone    = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .insertBefore($template),
-            $option   = $clone.find('[name="option[]"]');
+// Add button click handler
+.on('click', '.addButton', function() {
+  var $template = $('#optionTemplate'),
+  $clone    = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertBefore($template),
+  $option   = $clone.find('[name="option[]"]');
 
-              // Add new field
-              $('#knowledgeinputform').bootstrapValidator('addField', $option);
+// Add new field
+$('#knowledgeinputform').bootstrapValidator('addField', $option);
 
-            })
+})
 
-          // Remove button click handler
-          .on('click', '.removeButton', function() {
-            var $row    = $(this).parents('.form-group'),
-            $option = $row.find('[name="option[]"]');
+// Remove button click handler
+.on('click', '.removeButton', function() {
+  var $row    = $(this).parents('.form-group'),
+  $option = $row.find('[name="option[]"]');
 
-              // Remove element containing the option
-              $row.remove();
+// Remove element containing the option
+$row.remove();
 
-              // Remove field
-              $('#knowledgeinputform').bootstrapValidator('removeField', $option);
-            })
+// Remove field
+$('#knowledgeinputform').bootstrapValidator('removeField', $option);
+})
 
-          // Called after adding new field
-          .on('added.field.bv', function(e, $data) {
-              //data.field
-              // data.element --> The new field element
-              // data.options --> The new field options
-              $('#knowledge_item_desc_tem').wysihtml5();
+// Called after adding new field
+.on('added.field.bv', function(e, $data) {
+//data.field
+// data.element --> The new field element
+// data.options --> The new field options
+$('#knowledge_item_desc_tem').wysihtml5();
 
-              if (data.field === 'option[]') {
-                if ($('#knowledgeinputform').find(':visible[name="option[]"]').length >= MAX_OPTIONS) {
-                  $('#knowledgeinputform').find('.addButton').attr('disabled', 'disabled');
-                }
-              }
-            })
+if (data.field === 'option[]') {
+  if ($('#knowledgeinputform').find(':visible[name="option[]"]').length >= MAX_OPTIONS) {
+    $('#knowledgeinputform').find('.addButton').attr('disabled', 'disabled');
+  }
+}
+})
 
-          // Called after removing the field
-          .on('removed.field.bv', function(e, data) {
-           if (data.field === 'option[]') {
-            if ($('#knowledgeinputform').find(':visible[name="option[]"]').length < MAX_OPTIONS) {
-              $('#knowledgeinputform').find('.addButton').removeAttr('disabled');
-            }
-          }
-        });
-        });
+// Called after removing the field
+.on('removed.field.bv', function(e, data) {
+  if (data.field === 'option[]') {
+    if ($('#knowledgeinputform').find(':visible[name="option[]"]').length < MAX_OPTIONS) {
+      $('#knowledgeinputform').find('.addButton').removeAttr('disabled');
+    }
+  }
+});
+});
 
 $(document).ready(function() {
 
@@ -388,8 +388,8 @@ $(document).ready(function() {
         opt.val(cat_name);
         opt.text(cat_name);
         $('#selected_subject').append(opt);
-                      //cannot find
-                    });
+//cannot find
+});
       var opt2 = $('<option />');
       opt2.text('- Cannot find your subject? -');
       $('#selected_subject').append(opt2);
@@ -410,50 +410,50 @@ $(document).ready(function() {
 
     if (!value || value == '- Cannot find your area? -') {
 
-     var other = prompt( "Please input your area:" );
+      var other = prompt( "Please input your area:" );
 
-     if (!other) return false;
-     $(this).append('<option value="'
-       + other
-       + '" selected="selected">'
-       + other
-       + '</option>');
-   }
+      if (!other) return false;
+      $(this).append('<option value="'
+        + other
+        + '" selected="selected">'
+        + other
+        + '</option>');
+    }
 
-             //update subject
-             $("#selected_major > option").remove();
-             var area_name = $('#selected_area').val();
-             $.ajax({
-              type: "POST",
-              url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_major_dropdown_list/"+area_name,
-              success: function(majors){
-                $('#selected_major').show();
-                var opt1 = $('<option />');
-                opt1.text('- Major -');
-                $('#selected_major').append(opt1);
-                $.each(majors, function(cat_id, cat_name){
-                  var opt = $('<option />');
-                  opt.val(cat_name);
-                  opt.text(cat_name);
-                  $('#selected_major').append(opt);
-                      //cannot find
-                    });
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your major? -');
-                $('#selected_major').append(opt2);
-              },
+//update subject
+$("#selected_major > option").remove();
+var area_name = $('#selected_area').val();
+$.ajax({
+  type: "POST",
+  url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_major_dropdown_list/"+area_name,
+  success: function(majors){
+    $('#selected_major').show();
+    var opt1 = $('<option />');
+    opt1.text('- Major -');
+    $('#selected_major').append(opt1);
+    $.each(majors, function(cat_id, cat_name){
+      var opt = $('<option />');
+      opt.val(cat_name);
+      opt.text(cat_name);
+      $('#selected_major').append(opt);
+//cannot find
+});
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your major? -');
+    $('#selected_major').append(opt2);
+  },
 
-              error: function(){
-                var opt1 = $('<option />');
-                opt1.text('- Major -');
-                $('#selected_major').append(opt1);
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your major? -');
-                $('#selected_major').append(opt2);
-              }
-            });
+  error: function(){
+    var opt1 = $('<option />');
+    opt1.text('- Major -');
+    $('#selected_major').append(opt1);
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your major? -');
+    $('#selected_major').append(opt2);
+  }
+});
 
-          });//end of selected_area.change
+});//end of selected_area.change
 
 
 $('#selected_major').change( function() {
@@ -461,100 +461,100 @@ $('#selected_major').change( function() {
 
   if (!value || value == '- Cannot find your major? -') {
 
-   var other = prompt( "Please input your major:" );
+    var other = prompt( "Please input your major:" );
 
-   if (!other) return false;
-   $(this).append('<option value="'
-     + other
-     + '" selected="selected">'
-     + other
-     + '</option>');
- }
+    if (!other) return false;
+    $(this).append('<option value="'
+      + other
+      + '" selected="selected">'
+      + other
+      + '</option>');
+  }
 
 
-             //update subject
-             $("#selected_subject > option").remove();
-             var major_name = $('#selected_major').val();
-             $.ajax({
-              type: "POST",
-              url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_subject_dropdown_list/"+major_name,
-              success: function(subjects){
-                $('#selected_subject').show();
-                var opt1 = $('<option />');
-                opt1.text('- Subject -');
-                $('#selected_subject').append(opt1);
-                $.each(subjects, function(cat_id, cat_name){
-                  var opt = $('<option />');
-                  opt.val(cat_name);
-                  opt.text(cat_name);
-                  $('#selected_subject').append(opt);
-                      //cannot find
-                    });
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your subject? -');
-                $('#selected_subject').append(opt2);
-              },
-              error: function(){
-                var opt1 = $('<option />');
-                opt1.text('- Subject -');
-                $('#selected_subject').append(opt1);
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your subject? -');
-                $('#selected_subject').append(opt2);
-              }
+//update subject
+$("#selected_subject > option").remove();
+var major_name = $('#selected_major').val();
+$.ajax({
+  type: "POST",
+  url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_subject_dropdown_list/"+major_name,
+  success: function(subjects){
+    $('#selected_subject').show();
+    var opt1 = $('<option />');
+    opt1.text('- Subject -');
+    $('#selected_subject').append(opt1);
+    $.each(subjects, function(cat_id, cat_name){
+      var opt = $('<option />');
+      opt.val(cat_name);
+      opt.text(cat_name);
+      $('#selected_subject').append(opt);
+//cannot find
+});
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your subject? -');
+    $('#selected_subject').append(opt2);
+  },
+  error: function(){
+    var opt1 = $('<option />');
+    opt1.text('- Subject -');
+    $('#selected_subject').append(opt1);
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your subject? -');
+    $('#selected_subject').append(opt2);
+  }
 
-            });
-            }); //end of selected_major.change
+});
+}); //end of selected_major.change
 
 $('#selected_subject').change( function() {
   var value = $(this).val();
 
   if (!value || value == '- Cannot find your subject? -') {
 
-   var other = prompt( "Please input your subject:" );
+    var other = prompt( "Please input your subject:" );
 
-   if (!other) return false;
-   $(this).append('<option value="'
-     + other
-     + '" selected="selected">'
-     + other
-     + '</option>');
- }
+    if (!other) return false;
+    $(this).append('<option value="'
+      + other
+      + '" selected="selected">'
+      + other
+      + '</option>');
+  }
 
 
-             //update subject
-             $("#selected_chapter > option").remove();
-             var subject_name = $('#selected_subject').val();
-             $.ajax({
-              type: "POST",
-              url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_chapter_dropdown_list/"+subject_name,
-              success: function(chapters){
-                $('#selected_chapter').show();
-                var opt1 = $('<option />');
-                opt1.text('- Chapter -');
-                $('#selected_chapter').append(opt1);
-                $.each(chapters, function(cat_id, cat_name){
-                  var opt = $('<option />');
-                  opt.val(cat_name);
-                  opt.text(cat_name);
-                  $('#selected_chapter').append(opt);
-                      //cannot find
-                    });
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your chapter? -');
-                $('#selected_chapter').append(opt2);
-              },
-              error: function(){
-                var opt1 = $('<option />');
-                opt1.text('- Chapter -');
-                $('#selected_chapter').append(opt1);
-                var opt2 = $('<option />');
-                opt2.text('- Cannot find your chapter? -');
-                $('#selected_chapter').append(opt2);
-              }
+//update subject
+$("#selected_chapter > option").remove();
+var subject_name = $('#selected_subject').val();
+$.ajax({
+  type: "POST",
+  url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_chapter_dropdown_list/"+subject_name,
+  success: function(chapters){
+    $('#selected_chapter').show();
+    var opt1 = $('<option />');
+    opt1.text('- Chapter -');
+    $('#selected_chapter').append(opt1);
+    $.each(chapters, function(cat_id, cat_name){
+      var opt = $('<option />');
+      opt.val(cat_name);
+      opt.text(cat_name);
+      $('#selected_chapter').append(opt);
+//cannot find
+});
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your chapter? -');
+    $('#selected_chapter').append(opt2);
+  },
+  error: function(){
+    var opt1 = $('<option />');
+    opt1.text('- Chapter -');
+    $('#selected_chapter').append(opt1);
+    var opt2 = $('<option />');
+    opt2.text('- Cannot find your chapter? -');
+    $('#selected_chapter').append(opt2);
+  }
 
-            });
-            }); //end of selected_subject.change
+});
+}); //end of selected_subject.change
 
 $('#selected_chapter').change( function() {
   var value = $(this).val();
@@ -565,10 +565,10 @@ $('#selected_chapter').change( function() {
 
     if (!other) return false;
     $(this).append('<option value="'
-     + other
-     + '" selected="selected">'
-     + other
-     + '</option>');
+      + other
+      + '" selected="selected">'
+      + other
+      + '</option>');
 
   }
 

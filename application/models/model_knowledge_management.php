@@ -572,6 +572,137 @@
 		}
 
 
+
+//=================================================================================================================
+//=================================================================================================================
+//																												  #
+//												Teacher Functions   											  #
+//																												  #
+//=================================================================================================================
+//=================================================================================================================	
+
+
+		public function get_category_list(){
+			$query = "
+				SELECT cat1.cat_id as 'level4_cat_id',
+					   cat1.cat_name as 'level4_cat',
+					   cat2.cat_id as 'level3_cat_id',
+					   cat2.cat_name as 'level3_cat',
+					   cat3.cat_id as 'level2_cat_id',
+					   cat3.cat_name as 'level2_cat',
+					   cat4.cat_id as 'level1_cat_id',
+					   cat4.cat_name as 'level1_cat'
+				FROM category cat1, category cat2, category cat3, category cat4
+				WHERE cat1.parent_id = cat2.cat_id
+				AND cat2.parent_id = cat3.cat_id
+				AND cat3.parent_id = cat4.cat_id
+				ORDER BY cat1.level
+
+			";
+
+			return $this->db->query($query)->result();
+		}
+
+		public function update_category($cat_id, $new_value){
+			$this->db->where('cat_id', $cat_id);
+			$this->db->update('category', array('cat_name' => $new_value));
+		}
+
+		public function new_category(){
+			// insert category to DB
+			$cat_owner = $this->session->userdata('email');
+
+			$cat_area = $this->input->post('create_area');
+			$cat_major = $this->input->post('create_major');
+			$cat_subject = $this->input->post('create_subject');
+			$cat_chapter = $this->input->post('create_chapter');
+
+				//update category
+			$check_area_exists_category = $this->db->get_where('category', array('cat_name' => $cat_area, 'level' => 1));
+			if($check_area_exists_category->num_rows == 0){
+				$cat_data = array(
+						'cat_id' => "",
+						'cat_name' => $cat_area,
+						'parent_id' => NULL,
+						'level' => 1,
+						'count' => 1,
+						'created_time' => date("Y-m-d H:i:s")
+					);
+				$this->db->insert('category', $cat_data);
+			}
+			else if($check_area_exists_category->num_rows == 1){
+				$new_count = $this->db->get_where('category', array('cat_name' => $cat_area))->row()->count + 1;
+				$this->db->where('cat_name', $cat_area);
+				$this->db->update('category', array('count' => $new_count));
+			}
+
+
+				//update category
+			$check_major_exists_category = $this->db->get_where('category', array('cat_name' => $cat_major, 'level' => 2));
+			if($check_major_exists_category->num_rows == 0){
+				$cat_data = array(
+						'cat_id' => "",
+						'cat_name' => $cat_major,
+						'parent_id' => $this->db->get_where('category', array('cat_name' => $cat_area))->row()->cat_id,
+						'level' => 2,
+						'count' => 1,
+						'created_time' => date("Y-m-d H:i:s")
+					);
+				$this->db->insert('category', $cat_data);
+			}
+			else if($check_major_exists_category->num_rows == 1){
+				$new_count = $this->db->get_where('category', array('cat_name' => $cat_major))->row()->count + 1;
+				$this->db->where('cat_name', $cat_major);
+				$this->db->update('category', array('count' => $new_count));
+			}
+
+				//update category
+			$check_subject_exists_category = $this->db->get_where('category', array('cat_name' => $cat_subject, 'level' => 3));
+			if($check_subject_exists_category->num_rows == 0){
+				$cat_data = array(
+						'cat_id' => "",
+						'cat_name' => $cat_subject,
+						'parent_id' => $this->db->get_where('category', array('cat_name' => $cat_major))->row()->cat_id,
+						'level' => 3,
+						'count' => 1,
+						'created_time' => date("Y-m-d H:i:s")
+					);
+				$this->db->insert('category', $cat_data);
+			}
+			else if($check_subject_exists_category->num_rows == 1){
+				$new_count = $this->db->get_where('category', array('cat_name' => $cat_subject))->row()->count + 1;
+				$this->db->where('cat_name', $cat_subject);
+				$this->db->update('category', array('count' => $new_count));
+			}
+
+
+				//update category
+			$check_chapter_exists_category = $this->db->get_where('category', array('cat_name' => $cat_chapter, 'level' => 4));
+			if($check_chapter_exists_category->num_rows == 0){
+				$cat_data = array(
+						'cat_id' => "",
+						'cat_name' => $cat_chapter,
+						'parent_id' => $this->db->get_where('category', array('cat_name' => $cat_subject))->row()->cat_id,
+						'level' => 4,
+						'count' => 1,
+						'created_time' => date("Y-m-d H:i:s")
+					);
+				$this->db->insert('category', $cat_data);
+			}
+			else if($check_chapter_exists_category->num_rows == 1){
+				$new_count = $this->db->get_where('category', array('cat_name' => $cat_chapter))->row()->count + 1;
+				$this->db->where('cat_name', $cat_chapter);
+				$this->db->update('category', array('count' => $new_count));
+			}
+		}
+
+
+		public function delete_category($cat_id){
+			$this->db->where('cat_id', $cat_id);
+			$this->db->delete('category');
+		}
+
+
 	}//end of the class
 
 	class Category{

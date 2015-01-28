@@ -32,6 +32,10 @@
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" media="screen">
         <script src='<?=base_url().'assets/datatable/dataTables.bootstrap.js'?>'></script>
 
+        <!-- PNotify -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.css'?>' media="screen">
+        <script src='<?=base_url().'assets/js/pnotify.custom.js'?>'></script>
+
 
     </head>
     <body class="skin-blue fixed">
@@ -60,7 +64,7 @@
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope"></i>
+                                <i class="glyphicon glyphicon-bell"></i>
                                 <span class="label label-success" id="badge_count">0</span>
                             </a>
                             <ul class="dropdown-menu">
@@ -180,6 +184,10 @@
                             <a href="" data-toggle="modal" data-target="#create_new_knowledge" id="new_knowledge"><i class="glyphicon glyphicon-pencil"></i> New Knowledge</a>
                         </li>
 
+                        <li>
+                            <a href="<?php echo base_url() . 'index.php/main/category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
+                        </li>
+
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-search"></i>
@@ -231,6 +239,9 @@
                 </div>
             </div>
 
+            <!-- just show the welcome once -->
+            <input type="hidden" id="just_login" value="<?php echo $this->session->userdata('just_login'); ?>" />
+
         <script>
         $("#for_hidden_top").autoHidingNavbar();
 
@@ -257,8 +268,72 @@
                 success: function(data){
                 }
               });
-          }
+        }
 
+
+
+        //new knowledge script
+          $('#wizard1').bootstrapWizard({
+
+            'tabClass': 'nav nav-pills',
+
+            'nextSelector': '.btn-next',
+
+            'previousSelector': '.btn-previous',
+
+             onInit : function(tab, navigation,index){
+
+             
+
+               //check number of tabs and fill the entire row
+
+               var $total = navigation.find('li').length;
+
+               $width = 100/$total;
+
+               navigation.find('li').css('width',$width + '%');
+
+            },
+
+             onTabClick : function(tab, navigation, index){
+
+                // Disable the posibility to click on tabs
+
+                return false;
+
+            }, 
+
+            onTabShow: function(tab, navigation, index) {
+
+                var $total = navigation.find('li').length;
+
+                var $current = index+1;
+
+                
+
+                var wizard = navigation.closest('.wizard-card');
+
+                
+
+                // If it's the last tab then hide the last button and show the finish instead
+
+                if($current >= $total) {
+
+                    $(wizard).find('.btn-next').hide();
+
+                    $(wizard).find('.btn-finish').show();
+
+                } else {
+
+                    $(wizard).find('.btn-next').show();
+
+                    $(wizard).find('.btn-finish').hide();
+
+                }
+
+            }
+
+            }); 
 
 
         </script>

@@ -63,7 +63,7 @@ require('header.php');
 
                                     <div class="timeline-footer">
                                         <a class="btn btn-primary btn-xs" onclick="update_knowledge_detail( ' . $row->knowledge_id . ' )">Details</a>
-                                        <a href="delete_knowledge?knowledge_id=' . $row->knowledge_id . "\"" . ' class="btn btn-danger btn-xs" id="delete_button" data-toggle="confirmation" data-placement="right" data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt" data-btn-ok-class="btn-success" data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle" data-btn-cancel-class="btn-danger">Delete</a>
+                                        <a href="delete_knowledge?knowledge_id=' . $row->knowledge_id . "\"" . ' class="btn btn-danger btn-xs" id="delete_button" data-toggle="confirmation" data-placement="right" data-btn-ok-label="Yes!" data-btn-ok-icon="glyphicon glyphicon-share-alt" data-btn-ok-class="btn-success" data-btn-cancel-label="Stop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle" data-btn-cancel-class="btn-danger">Delete</a>
 
                                         <div class="btn-group btn-xs pull-right">
                                             <button type="button" class="btn btn-warning btn-xs btn-flat" id="category_button">Category</button>

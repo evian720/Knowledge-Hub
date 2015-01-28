@@ -421,7 +421,6 @@ require('header.php');
                                     <thead>
                                       <tr>
                                         <th>Chapter</th>
-                                        <th> </th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -429,8 +428,7 @@ require('header.php');
                                       foreach ($chapter as $row) {
                                         echo '
                                         <tr>
-                                          <td> ' . $row->cat_name . '</td>
-                                          <td><input type="radio" name="optradio" value="' . $row->cat_name . '"></td>
+                                          <td><input type="radio" name="optradio" value="' . $row->cat_name . '">  ' . $row->cat_name . '</td>
                                         </tr>
                                         ';
                                       }

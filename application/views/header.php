@@ -60,7 +60,7 @@
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope"></i>
+                                <i class="glyphicon glyphicon-bell"></i>
                                 <span class="label label-success" id="badge_count">0</span>
                             </a>
                             <ul class="dropdown-menu">
@@ -310,8 +310,8 @@
 
           if($('#just_login').val() == 1 ){
             setTimeout(function(){ 
-                                      alertify.set({ delay: 2500 });
-                                      alertify.success("welcome to Knowledge Hub!");
+              alertify.set({ delay: 2500 });
+              alertify.success("welcome to Knowledge Hub!");
             }, 500);
 
             $.ajax({

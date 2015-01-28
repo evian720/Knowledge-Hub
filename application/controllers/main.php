@@ -101,7 +101,7 @@ class Main extends CI_Controller {
 			
 			$this->session->set_userdata($data);
 			if( $this->session->userdata('user_role') == 'teacher' ){
-				redirect('index.php/main/teacher_dashboard');
+				$this->teacher_dashboard();
 			}
 			else{
 				$this->dashboard();
@@ -247,7 +247,13 @@ class Main extends CI_Controller {
 	public function submit_knowledge(){
 		$this->load->model('model_knowledge_management');
 		$this->model_knowledge_management->add_knowledge();
-		redirect('index.php/main/dashboard');
+		if( $this->session->userdata('user_role') == 'teacher' ){
+			$this->teacher_dashboard();
+		}
+		else{
+			$this->dashboard();
+		}
+
 	}
 
 	public function view_knowledge(){
@@ -532,6 +538,44 @@ class Main extends CI_Controller {
 		$this->load->view('view_teacher_standard_tree');
 	}
 	
+	public function category_management(){
+		$this->load->model('model_knowledge_management');
+		$data['categories'] = $this->model_knowledge_management->get_category_list();
+
+		$this->load->view('view_teacher_category_management', $data);
+	}
+
+	public function edit_category(){
+		$cat_id = $this->input->post('pk');
+		$new_value = $this->input->post('value');
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->update_category($cat_id, $new_value);
+	}
+
+	public function get_category_for_creation(){
+		//pass the selections to create knowledge view
+		$this->load->model('model_knowledge_management');
+		$data['major_selection'] = $this->model_knowledge_management->get_all_major();
+		$data['area_selection'] = $this->model_knowledge_management->get_all_area();
+		$data['subject_selection'] = $this->model_knowledge_management->get_all_subject();
+		$data['chapter_selection'] = $this->model_knowledge_management->get_all_chapter();
+
+		$this->load->view('modal_create_category', $data);
+	}
+
+	public function submit_category(){
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->new_category();
+		$this->category_management();
+	}
+
+	public function delete_cat(){
+		$cat_id = $this->input->get('cat_id');
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->delete_category($cat_id);
+
+		$this->category_management();
+	}
 	
 	
 }
