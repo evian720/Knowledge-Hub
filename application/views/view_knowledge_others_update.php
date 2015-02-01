@@ -17,10 +17,7 @@
               <span class="caret"></span>
             </span>
             <ul class="dropdown-menu pull-right">
-              <li><a class="popupform" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
-                  <script>
-                    jQuery("a.popupform").colorbox({opacity: 0.5, width: "90%", height: "90%"});
-                  </script>
+              <li><a class="" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
               </li>
             </ul>
           </div>
@@ -50,7 +47,7 @@
   </div>  <!-- end of showing the knowledge -->
 
           <!-- for update use -->
-          <input type="hidden" id="selected_value" value="<?php echo $selected; ?>" />
+          <input type="hidden" id="selected_value_<?php echo $changing; ?>"  value="<?php echo $selected; ?>" />
 
 <script type="text/javascript">
 

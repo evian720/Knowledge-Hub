@@ -128,7 +128,7 @@
                                 <li class="user-header bg-light-blue" style="height: 100px;">
                                     <p>
                                         <?php echo $this->session->userdata('firstname')?> - Student
-                                        <small>Start Knowledge Hub @ </small>
+                                        <small>Start Knowledge Hub @</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

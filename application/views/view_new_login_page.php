@@ -17,6 +17,8 @@
 <link rel="stylesheet" href='<?=base_url().'bootstrap/css/bootstrap-login.css'?>' media="screen">
 
 <link rel="stylesheet" href='<?=base_url().'assets/css/fonts/icomoon/style.css'?>' media="screen">
+<link rel="stylesheet" href='<?=base_url().'assets/css/login-widget.css'?>' media="screen">
+
 
 <!--<link rel="stylesheet" href="assets/css/login-style.css" media="screen"> -->
 <link rel="stylesheet" href='<?=base_url().'assets/css/login-style.css'?>' media="screen">
@@ -185,7 +187,7 @@
 	<!-- start of the rotation section -->
 	<div style="background-color: #E5E9ED; height: 500px;">
 
-		<div class="row col-sm-12" style="padding-top: 0px;">
+		<div class="row" style="padding-top: 0px; ">
 
 			<h5 class="title">
 				More about the system
@@ -193,9 +195,8 @@
 				<small>FYP of Evian, Yiyun ZHOU</small>
 			</h5>
 
-			<div class="col-sm-2 col-md-3"></div>
-
-			<div class="col-sm-3 col-md-2">
+			<div style="width: 95%">
+			<div class="col-sm-3 col-md-2 col-md-offset-3 col-sm-offset-1">
 				<div class="card-container">
 					<div class="card">
 						<div class="front">
@@ -239,8 +240,6 @@
 				</div> <!-- end card-container -->
 			</div>
 
-			<div class="col-sm-1"></div>
-
 			<div class="col-sm-3 col-md-2">
 				<div class="card-container">
 					<div class="card">
@@ -248,6 +247,53 @@
 							<div class="content">
 								<div class="main">
 									<h3 class="name">System</h3>
+									<p class="profession">Your Personal KM</p>
+									<p style="font-size: 14px; text-align: center;"> - Bootstrap</p>
+									<p style="font-size: 14px; text-align: center;"> - Javascript/jQuery</p>
+									<p style="font-size: 14px; text-align: center;"> - Codeigniter</p>
+									<p style="font-size: 14px; text-align: center;"> - D3.js</p>
+								</div>
+								<div class="footer">
+									<div class="rating">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+									</div>
+								</div>
+							</div>
+						</div> <!-- end front panel -->
+
+						<div class="back">
+							<div class="header">
+								<h5 class="motto">Ignorance is the curse of God; knowledge is the wing wherewith we fly to heaven -- William Shakespeare</h5>
+							</div> 
+							<div class="content">
+								<div class="main">
+									<h4 style="font-size: 18px;"></h4>
+									<p style="font-size: 14px; text-align: center;"></p>
+									<p style="font-size: 14px; text-align: center;"> - </p>
+									<p style="font-size: 14px; text-align: center;"> - </p>
+									<p style="font-size: 14px; text-align: center;"> - </p>
+									<p style="font-size: 14px; text-align: center;"> - </p>
+								</div>
+							</div>
+							<div class="footer">
+								<div class="social-links text-center">
+									<a href="https://www.facebook.com/evian.zhou" class="facebook"><i class="fa fa-facebook fa-fw"></i></a>
+								</div>
+							</div>
+						</div> <!-- end back panel -->
+					</div> <!-- end card -->
+				</div> <!-- end card-container -->
+			</div>
+
+			<div class="col-sm-3 col-md-2">
+				<div class="card-container">
+					<div class="card">
+						<div class="front">
+							<div class="content">
+								<div class="main">
+									<h3 class="name">Project</h3>
 									<p class="profession">Your Personal KM</p>
 									<h5 style="font-size: 14px;" class="text-center"> - FYP of BSc COMP STD</h5>
 									<h5 style="font-size: 14px;"> - Development Starts: Spet. 2014</h5>
@@ -270,10 +316,6 @@
 							<div class="content">
 								<div class="main">
 									<h4 style="font-size: 18px;">Technology</h4>
-									<p style="font-size: 14px; text-align: center;"> - Bootstrap</p>
-									<p style="font-size: 14px; text-align: center;"> - Javascript/jQuery</p>
-									<p style="font-size: 14px; text-align: center;"> - Codeigniter</p>
-									<p style="font-size: 14px; text-align: center;"> - D3.js</p>
 								</div>
 							</div>
 							<div class="footer">
@@ -285,63 +327,90 @@
 					</div> <!-- end card -->
 				</div> <!-- end card-container -->
 			</div>
+			</div> <!-- end of 95 -->
+
 		</div>
 	</div><!-- start of the rotation section -->
 
 
-	<div style="background-color: #2f2f2f; height: 300px" id="black">
-		<div style="padding-top: 50px;text-align: center;">
-			<div class="row col-sm-12">
-				<div class="col-sm-2 col-sm-offset-2">
-					<p><i class="fa fa-user"></i></p>
+	<div style="background-color: #2f2f2f; height: 280px" id="black">
+		<div style="padding-top: 50px;text-align: center; width: 95%;">
+				<div class="col-md-2 col-md-offset-2">
+					<p style="color: #5bb75b;"><i class="fa fa-user"></i></p>
 					<h1>349</h1>
 					<hr>
 					<h4>users</h4>
 				</div>		
 
-				<div class="col-sm-2">
-					<p><i class="fa fa-cloud"></i></p>
+				<div class="col-md-2">
+					<p style="color: #5bb75b;"><i class="fa fa-cloud"></i></p>
 					<h1>8</h1>
 					<hr>
 					<h4>area</h4>
 				</div>
 
-				<div class="col-sm-2">
-					<p><i class="fa fa-graduation-cap"></i></p>
+				<div class="col-md-2">
+					<p style="color: #5bb75b;"><i class="fa fa-graduation-cap"></i></p>
 					<h1>61</h1>
 					<hr>
 					<h4>major</h4>
 				</div>
 
-				<div class="col-sm-2">
-					<p><i class="fa fa-file-pdf-o"></i></p>
+				<div class="col-md-2">
+					<p style="color: #5bb75b;"><i class="fa fa-file-pdf-o"></i></p>
 					<h1>2,988</h1>
 					<hr>
 					<h4>knowledge</h4>
 				</div>
-			</div>
-
-
 
 		</div>
 	</div><!-- /black -->
 
 
 
-	<div style="background-color: #FFFFFF; height: 50px;" class="col-sm-12">
+	<div style="background-color: #FFFFFF; height: 400px" id="black">
+		<div style="padding-top: 50px;text-align: center;">
+			<h5 class="title">
+				Hottest Knowledge
+				<br>
+				<small>________________________________________________________________</small>
+			</h5>
+
+			<div class="row">
+				<div class="col-md-4 widget col-md-offset-2">
+					<div class="widget-header">
+						<span>Default Widget Box</span>
+					</div>
+					<div class="widget-content">
+						<p class="alert alert-info">Hello, I'm a widget box's default body</p>
+					</div>
+				</div>
+
+				<div class="col-md-4 widget">
+					<div class="widget-header">
+						<span>Default Widget Box</span>
+					</div>
+					<div class="widget-content">
+						<p class="alert alert-info">Hello, I'm a widget box's default body</p>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+	</div><!-- /black -->
+
+
+
+
+	<div style="background-color: #FFFFFF; height: 50px;">
 		<div style="text-align: center; padding-top: 15px;">
 			<a href="http://101.78.175.101:8580/fyp/knowledge_hub" style="color: black;  font-size: 14px;">@Organizing & Extending the Memory of Your Brain</a>
 		</div>
 	</div>
 
-
-
-      
-	
-
-
-
-    
+  
 
 <!-- Core Scripts -->
 <script src='https://code.jquery.com/jquery-2.1.3.min.js'></script>

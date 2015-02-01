@@ -330,22 +330,20 @@ class Main extends CI_Controller {
 		$config['uri_segment'] = 3;
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_area('Technology');
 		$this->pagination->initialize($config);
 
 		$data['user_category'] = $this->model_knowledge_management->get_category_of_a_user($this->session->userdata('email'));
 
 		// create link for area
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_area('Technology');
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_area('Technology', $this->session->userdata('email'));
 		$this->pagination->initialize($config);
-
-		$data['area_knowledge'] = $this->model_knowledge_management->get_knowledge_by_area('Technology', $config['per_page'], $page);
+		$data['area_knowledge'] = $this->model_knowledge_management->get_others_knowledge_by_area('Technology', $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link1'] = $this->pagination->create_links();
 
 		// create link for major
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_major($this->session->userdata('major'));
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_major($this->session->userdata('major'), $this->session->userdata('email'));
 		$this->pagination->initialize($config);
-		$data['major_knowledge'] = $this->model_knowledge_management->get_knowledge_by_major($this->session->userdata('major'), $config['per_page'], $page);
+		$data['major_knowledge'] = $this->model_knowledge_management->get_others_knowledge_by_major($this->session->userdata('major'), $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link2'] = $this->pagination->create_links();
 
 		//get all area
@@ -370,21 +368,20 @@ class Main extends CI_Controller {
 		$config['uri_segment'] = 3;
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_area($option_selected);
-		$this->pagination->initialize($config);
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_area($option_selected, $this->session->userdata('email'));
 
 		$data['user_category'] = $this->model_knowledge_management->get_category_of_a_user($this->session->userdata('email'));
 
 		// create link for area
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_area($option_selected);
 		$this->pagination->initialize($config);
-		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_area($option_selected, $config['per_page'], $page);
+		$data['knowledges'] = $this->model_knowledge_management->get_others_knowledge_by_area($option_selected, $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link1'] = $this->pagination->create_links();
 
 
 		//get all area
 		$data['area'] = $this->model_knowledge_management->get_all_area();
 
+		$data['changing'] = "area";
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -401,20 +398,20 @@ class Main extends CI_Controller {
 		$config['uri_segment'] = 3;
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_major($option_selected);
-		$this->pagination->initialize($config);
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_major($option_selected, $this->session->userdata('email'));
 
 		$data['user_category'] = $this->model_knowledge_management->get_category_of_a_user($this->session->userdata('email'));
 
 		// create link for major
 		$this->pagination->initialize($config);
-		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_major($option_selected, $config['per_page'], $page);
+		$data['knowledges'] = $this->model_knowledge_management->get_others_knowledge_by_major($option_selected, $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link1'] = $this->pagination->create_links();
 
 
 		//get all area
 		$data['major'] = $this->model_knowledge_management->get_all_major();
 
+		$data['changing'] = "major";
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -431,20 +428,20 @@ class Main extends CI_Controller {
 		$config['uri_segment'] = 3;
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_subject($option_selected);
-		$this->pagination->initialize($config);
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_subject($option_selected, $this->session->userdata('email'));
 
 		$data['user_category'] = $this->model_knowledge_management->get_category_of_a_user($this->session->userdata('email'));
 
 		// create link for major
 		$this->pagination->initialize($config);
-		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_subject($option_selected, $config['per_page'], $page);
+		$data['knowledges'] = $this->model_knowledge_management->get_others_knowledge_by_subject($option_selected, $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link1'] = $this->pagination->create_links();
 
 
 		//get all subject
 		$data['subject'] = $this->model_knowledge_management->get_all_subject();
 
+		$data['changing'] = "subject";
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -461,20 +458,20 @@ class Main extends CI_Controller {
 		$config['uri_segment'] = 3;
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_chapter($option_selected);
-		$this->pagination->initialize($config);
+		$config['total_rows'] = $this->model_knowledge_management->count_others_knowledge_by_chapter($option_selected, $this->session->userdata('email'));
 
 		$data['user_category'] = $this->model_knowledge_management->get_category_of_a_user($this->session->userdata('email'));
 
 		// create link for major
 		$this->pagination->initialize($config);
-		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_chapter($option_selected, $config['per_page'], $page);
+		$data['knowledges'] = $this->model_knowledge_management->get_others_knowledge_by_chapter($option_selected, $config['per_page'], $page, $this->session->userdata('email'));
 		$data['link1'] = $this->pagination->create_links();
 
 
 		//get all subject
 		$data['chapter'] = $this->model_knowledge_management->get_all_subject();
 
+		$data['changing'] = "chapter";
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -515,6 +512,13 @@ class Main extends CI_Controller {
 		$this->model_knowledge_management->reject_knowledge_request($knowledge_request_id);
 		
 	}
+
+	public function check_requested_knowledge_exists($knowledge_id){
+		$this->load->model('model_knowledge_management');
+		$result = $this->model_knowledge_management->requested_knowledge_exists($knowledge_id, $this->session->userdata('email'));
+		echo $result;
+	}
+
 	// end of request system
 
 	public function get_knowledge_for_tree_by_cat($cat_name){

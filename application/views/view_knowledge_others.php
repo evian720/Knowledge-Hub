@@ -155,10 +155,7 @@ require('header.php');
                             <span class="caret"></span>
                           </span>
                           <ul class="dropdown-menu pull-right">
-                            <li><a class="popupform" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
-                              <script>
-                                jQuery("a.popupform").colorbox({opacity: 0.5, width: "90%", height: "90%"});
-                              </script>
+                            <li><a class="" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
                             </li>
                           </ul>
                         </div>
@@ -299,10 +296,7 @@ require('header.php');
                                 <span class="caret"></span>
                               </span>
                               <ul class="dropdown-menu pull-right">
-                                <li><a class="popupform" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
-                                  <script>
-                                    jQuery("a.popupform").colorbox({opacity: 0.5, width: "90%", height: "90%"});
-                                  </script>
+                                <li><a class="" href="' . base_url() . "index.php/main/view_knowledge_detail/" . $knowledge->knowledge_id . '">View Detail</a>
                                 </li>
                               </ul>
                             </div>
@@ -321,7 +315,7 @@ require('header.php');
                           </div>
                         </div>
                       </div> '; } ?>
-                      <p><?php echo $link1; ?></p>
+                      <p><?php echo $link2; ?></p>
                     </div>  <!-- end of showing the knowledge -->
                   </div>
                 </div>
@@ -483,6 +477,31 @@ require('header.php');
       </div><!-- ./wrapper -->
 
 
+      <button type="button hidden" id="confirm_request_knowledge_button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirm_request_knowledge"></button>
+      <!-- modal for area selection -->
+      <div class="modal fade" id="confirm_request_knowledge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Attention!</h4>
+            </div>
+            <div class="modal-body">
+              <p>You already have this knowledge!</p> 
+              <p>Would you like to add this as a reference?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" style="color: white">No</button>
+              <button type="button" id="confirm_combine" data-dismiss="modal" class="btn btn-success">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input type="hidden" id="requested_knowledge_id"  value="" />
+
+
+
+
 <script type="text/javascript">
     // update area knowledge
    $('#area_modal_submit').on('click', function(e){
@@ -494,7 +513,7 @@ require('header.php');
             success: function(data){
                   $('#selectArea').modal('toggle');
                   $('#area_knowledge_zone').html(data);
-                  document.getElementById("current_area_selection").innerHTML= document.getElementById("selected_value").value;
+                  document.getElementById("current_area_selection").innerHTML= document.getElementById("selected_value_area").value;
             }
         });
     });
@@ -509,7 +528,7 @@ require('header.php');
             success: function(data){
                   $('#selectMajor').modal('toggle');
                   $('#major_knowledge_zone').html(data);
-                  document.getElementById("current_major_selection").innerHTML= document.getElementById("selected_value").value;
+                  document.getElementById("current_major_selection").innerHTML= document.getElementById("selected_value_major").value;
             }
         });
     });
@@ -524,7 +543,7 @@ require('header.php');
             success: function(data){
                   $('#selectSubject').modal('toggle');
                   $('#subject_knowledge_zone').html(data);
-                  document.getElementById("current_subject_selection").innerHTML= document.getElementById("selected_value").value;
+                  document.getElementById("current_subject_selection").innerHTML= document.getElementById("selected_value_subject").value;
             }
         });
     });
@@ -539,22 +558,47 @@ require('header.php');
             success: function(data){
                   $('#selectChapter').modal('toggle');
                   $('#chapter_knowledge_zone').html(data);
-                  document.getElementById("current_chapter_selection").innerHTML= document.getElementById("selected_value").value;
+                  document.getElementById("current_chapter_selection").innerHTML= document.getElementById("selected_value_chapter").value;
             }
         });
     });
 
     // request knowledge
     function send_request(knowledge_id){
+
       $.ajax({
+          url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/check_requested_knowledge_exists/" + knowledge_id, //this is the submit URL
+          type: 'POST', //or POST
+          success: function(data){
+            if(data == 1){
+              $('#confirm_request_knowledge_button').click();
+              $('#requested_knowledge_id').val(knowledge_id);
+            }
+            else{
+              alert("false");
+            }
+          }
+      });
+
+    }
+
+    function confirmed_request(){
+        knowledge_id = $('#requested_knowledge_id').val();
+        $.ajax({
             url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/request_knowledge/" + knowledge_id, //this is the submit URL
             type: 'POST', //or POST
             success: function(){
               alertify.success("Request Sent!");
             }
         });
-
     }
+
+
+      $("#confirm_request_knowledge").on("click", function(e) {
+          confirmed_request();
+      });
+
+
 
     alertify.set({ delay: 2500 });
 
