@@ -33,8 +33,8 @@
         <script src='<?=base_url().'assets/datatable/dataTables.bootstrap.js'?>'></script>
 
         <!-- PNotify -->
-        <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.css'?>' media="screen">
-        <script src='<?=base_url().'assets/js/pnotify.custom.js'?>'></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.min.css'?>' media="screen">
+        <script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
 
 
     </head>

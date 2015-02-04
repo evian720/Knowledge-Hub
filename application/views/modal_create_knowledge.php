@@ -38,7 +38,7 @@
               <div class="col-sm-7 col-sm-offset-1">
                 <div class="form-group">
                   <label >Knowledge Title</label>
-                  <input type="text" class="form-control" name="knowledge_title" required/>
+                  <input type="text" class="form-control typeahead" name="knowledge_title" id="for_typeahead" autocomplete="off" required/>
 
                 </div>
               </div>
@@ -525,35 +525,35 @@ $('#selected_subject').change( function() {
 //update subject
 $("#selected_chapter > option").remove();
 var subject_name = $('#selected_subject').val();
-$.ajax({
-  type: "POST",
-  url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_chapter_dropdown_list/"+subject_name,
-  success: function(chapters){
-    $('#selected_chapter').show();
-    var opt1 = $('<option />');
-    opt1.text('- Chapter -');
-    $('#selected_chapter').append(opt1);
-    $.each(chapters, function(cat_id, cat_name){
-      var opt = $('<option />');
-      opt.val(cat_name);
-      opt.text(cat_name);
-      $('#selected_chapter').append(opt);
-//cannot find
-});
-    var opt2 = $('<option />');
-    opt2.text('- Cannot find your chapter? -');
-    $('#selected_chapter').append(opt2);
-  },
-  error: function(){
-    var opt1 = $('<option />');
-    opt1.text('- Chapter -');
-    $('#selected_chapter').append(opt1);
-    var opt2 = $('<option />');
-    opt2.text('- Cannot find your chapter? -');
-    $('#selected_chapter').append(opt2);
-  }
+  $.ajax({
+    type: "POST",
+    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_chapter_dropdown_list/"+subject_name,
+    success: function(chapters){
+      $('#selected_chapter').show();
+      var opt1 = $('<option />');
+      opt1.text('- Chapter -');
+      $('#selected_chapter').append(opt1);
+      $.each(chapters, function(cat_id, cat_name){
+        var opt = $('<option />');
+        opt.val(cat_name);
+        opt.text(cat_name);
+        $('#selected_chapter').append(opt);
+        //cannot find
+        });
+        var opt2 = $('<option />');
+        opt2.text('- Cannot find your chapter? -');
+        $('#selected_chapter').append(opt2);
+      },
+      error: function(){
+        var opt1 = $('<option />');
+        opt1.text('- Chapter -');
+        $('#selected_chapter').append(opt1);
+        var opt2 = $('<option />');
+        opt2.text('- Cannot find your chapter? -');
+        $('#selected_chapter').append(opt2);
+      }
 
-});
+  });
 }); //end of selected_subject.change
 
 $('#selected_chapter').change( function() {
@@ -579,6 +579,44 @@ $('#selected_chapter').change( function() {
 
 });
 
+
+//start of typeahead
+
+
+$(document).ready(function(){
+
+  $.ajax({
+    type: "POST",
+    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_knowledge_title/",
+    success: function(knowledge_title){
+
+  $.get('http://101.78.175.101:8580/fyp/knowledge_hub/json/knowledge_title.json', function(data){
+    $("#for_typeahead").typeahead({ source: unique(data) });
+      },'json');
+    }
+  });
+
+});
+
+//function to remove duplicates
+function unique(obj){
+    var uniques=[];
+    var stringify={};
+    for(var i=0;i<obj.length;i++){
+       var keys=Object.keys(obj[i]);
+       keys.sort(function(a,b) {return a-b});
+       var str='';
+        for(var j=0;j<keys.length;j++){
+           str+= JSON.stringify(keys[j]);
+           str+= JSON.stringify(obj[i][keys[j]]);
+        }
+        if(!stringify.hasOwnProperty(str)){
+            uniques.push(obj[i]);
+            stringify[str]=true;
+        }
+    }
+    return uniques;
+}
 
 
 </script>

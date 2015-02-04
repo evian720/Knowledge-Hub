@@ -11,6 +11,7 @@
 					'knowledge_owner' => $this->session->userdata('email'),
 					'count' => 1,
 					'sharing_mode' => '',
+					'reference_knowledge_id' => '',
 					'created_time' => date("Y-m-d H:i:s")
 				);
 			$this->db->insert('knowledge', $data_knowledge);
@@ -169,6 +170,7 @@
 					'level3_cat' => $cat_subject,
 					'level4_cat' => $cat_chapter,
 					'sharing_mode' => "",
+					'reference_knowledge_id' => 'NULL',
 					'created_time' => date("Y-m-d H:i:s")
 				);
 			$this->db->insert('user_knowledge', $data_user_knowledge);
@@ -503,7 +505,7 @@
 			return $this->db->get()->result();
 		}
 
-		public function make_knowledge_request($knowledge_id, $request_sender){
+		public function make_knowledge_request($knowledge_id, $request_sender, $check_exists){
 			$check_request_sent = $this->db->get_where('knowledge_request', array('knowledge_id' => $knowledge_id, 'request_sender' => $request_sender, 'request_receiver' => $this->get_knowledge_owner($knowledge_id)))->num_rows;
 			if($check_request_sent == 0){
 							$data_knowledge_request = array(
@@ -513,6 +515,7 @@
 					'knowledge_id' => $knowledge_id,
 					'approved' => 0,
 					'read' => 0,
+					'knowledge_exists' =>$check_exists,
 					'request_time' => date("Y-m-d H:i:s")
 				);
 			$this->db->insert('knowledge_request', $data_knowledge_request);
@@ -539,81 +542,96 @@
 
 			//copy & paste the new knowledge
 			$knowledge_request = $this->db->get_where('knowledge_request', array('knowledge_request_id' => $knowledge_request_id))->row();
+
+			if($knowledge_request->knowledge_exists != 0){
+				$replace_title = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row()->knowledge_title;
+				
+				$this->db->select("*");
+				$this->db->from('knowledge');
+				$this->db->join('user_knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
+				$this->db->where(array('knowledge.knowledge_title' => $replace_title , 'user_knowledge.user_name' => $knowledge_request->request_sender));
+				$user_knowledge_id = $this->db->get()->row()->user_knowledge_id;
+
+				$this->db->where('user_knowledge_id',$user_knowledge_id);
+				$this->db->update('user_knowledge', array('reference_knowledge_id' => $knowledge_request->knowledge_id));
+
+			}else{
 			
-			//get the user_knowledge
-			$knowledge_to_copy = $this->db->get_where('user_knowledge', array('knowledge_id' => $knowledge_request->knowledge_id, 'user_name' => $knowledge_request->request_receiver))->row();
-			//insert into db for new user
-			$knowledge_for_new_user = array(
-						'user_knowledge_id' => '',
-						'user_name' => $knowledge_request->request_sender,
-						'knowledge_id' => $knowledge_request->knowledge_id,
-						'level1_cat' => $knowledge_to_copy->level1_cat,
-						'level2_cat' => $knowledge_to_copy->level2_cat,
-						'level3_cat' => $knowledge_to_copy->level3_cat,
-						'level4_cat' => $knowledge_to_copy->level4_cat,
-						'sharing_mode' => 'public',
-						'created_time' => date("Y-m-d H:i:s")
-					);
-			$this->db->insert('user_knowledge', $knowledge_for_new_user);
+				//get the user_knowledge
+				$knowledge_to_copy = $this->db->get_where('user_knowledge', array('knowledge_id' => $knowledge_request->knowledge_id, 'user_name' => $knowledge_request->request_receiver))->row();
+				//insert into db for new user
+				$knowledge_for_new_user = array(
+							'user_knowledge_id' => '',
+							'user_name' => $knowledge_request->request_sender,
+							'knowledge_id' => $knowledge_request->knowledge_id,
+							'level1_cat' => $knowledge_to_copy->level1_cat,
+							'level2_cat' => $knowledge_to_copy->level2_cat,
+							'level3_cat' => $knowledge_to_copy->level3_cat,
+							'level4_cat' => $knowledge_to_copy->level4_cat,
+							'sharing_mode' => 'public',
+							'reference_knowledge_id' => 'NULL',
+							'created_time' => date("Y-m-d H:i:s")
+						);
+				$this->db->insert('user_knowledge', $knowledge_for_new_user);
 
-			//update user category
-				//level 1 category
-			if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level1_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
-				$insert_level1_data = array(
-						'cat_id' => '',
-						'cat_name' => $knowledge_to_copy->level1_cat,
-						'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_request->request_sender))->row()->cat_id,
-						'level' => 1,
-						'cat_owner' => $knowledge_request->request_sender,
-						'created_time' => date("Y-m-d H:i:s")
-					);
-				$this->db->insert('user_category', $insert_level1_data);
+				//update user category
+					//level 1 category
+				if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level1_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
+					$insert_level1_data = array(
+							'cat_id' => '',
+							'cat_name' => $knowledge_to_copy->level1_cat,
+							'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_request->request_sender))->row()->cat_id,
+							'level' => 1,
+							'cat_owner' => $knowledge_request->request_sender,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+					$this->db->insert('user_category', $insert_level1_data);
+				}
+
+					//level 2 category
+				if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level2_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
+					$insert_level2_data = array(
+							'cat_id' => '',
+							'cat_name' => $knowledge_to_copy->level2_cat,
+							'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level1_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
+							'level' => 2,
+							'cat_owner' => $knowledge_request->request_sender,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+					$this->db->insert('user_category', $insert_level2_data);
+				}
+
+					//level 3 category
+				if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level3_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
+					$insert_level3_data = array(
+							'cat_id' => '',
+							'cat_name' => $knowledge_to_copy->level3_cat,
+							'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level2_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
+							'level' => 3,
+							'cat_owner' => $knowledge_request->request_sender,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+					$this->db->insert('user_category', $insert_level3_data);
+				}
+
+					//level 4 category
+				if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level4_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
+					$insert_level4_data = array(
+							'cat_id' => '',
+							'cat_name' => $knowledge_to_copy->level4_cat,
+							'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level3_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
+							'level' => 4,
+							'cat_owner' => $knowledge_request->request_sender,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+					$this->db->insert('user_category', $insert_level4_data);
+				}
+
+				//increase knowledge sharing count
+				$new_count = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row()->count + 1;
+				$this->db->where('knowledge_id', $knowledge_request->knowledge_id);
+				$this->db->update('knowledge', array('count' => $new_count));
 			}
-
-				//level 2 category
-			if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level2_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
-				$insert_level2_data = array(
-						'cat_id' => '',
-						'cat_name' => $knowledge_to_copy->level2_cat,
-						'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level1_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
-						'level' => 2,
-						'cat_owner' => $knowledge_request->request_sender,
-						'created_time' => date("Y-m-d H:i:s")
-					);
-				$this->db->insert('user_category', $insert_level2_data);
-			}
-
-				//level 3 category
-			if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level3_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
-				$insert_level3_data = array(
-						'cat_id' => '',
-						'cat_name' => $knowledge_to_copy->level3_cat,
-						'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level2_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
-						'level' => 3,
-						'cat_owner' => $knowledge_request->request_sender,
-						'created_time' => date("Y-m-d H:i:s")
-					);
-				$this->db->insert('user_category', $insert_level3_data);
-			}
-
-				//level 4 category
-			if( $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level4_cat, 'cat_owner' => $knowledge_request->request_sender))->num_rows == 0 ){
-				$insert_level4_data = array(
-						'cat_id' => '',
-						'cat_name' => $knowledge_to_copy->level4_cat,
-						'parent_id' => $this->db->get_where('user_category', array('cat_name' => $knowledge_to_copy->level3_cat, 'cat_owner' => $knowledge_request->request_sender))->row()->cat_id,
-						'level' => 4,
-						'cat_owner' => $knowledge_request->request_sender,
-						'created_time' => date("Y-m-d H:i:s")
-					);
-				$this->db->insert('user_category', $insert_level4_data);
-			}
-
-			//increase knowledge sharing count
-			$new_count = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row()->count + 1;
-			$this->db->where('knowledge_id', $knowledge_request->knowledge_id);
-			$this->db->update('knowledge', array('count' => $new_count));
-
 		}
 
 		public function reject_knowledge_request($knowledge_request_id){
@@ -645,6 +663,16 @@
 			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->where(array('user_knowledge.level4_cat' => $cat_name, 'user_knowledge.user_name' => $user_name));
 			return $this->db->get()->result();
+		}
+
+		public function get_knowledge_title(){
+			$this->db->select("knowledge_title AS 'name' ");
+			$result = $this->db->get('knowledge')->result();
+
+			$str = json_encode($result);
+			
+			$file = "json/knowledge_title.json";
+		    file_put_contents($file, $str);
 		}
 
 
@@ -776,6 +804,13 @@
 		public function delete_category($cat_id){
 			$this->db->where('cat_id', $cat_id);
 			$this->db->delete('category');
+		}
+
+		public function get_hottest_knowledge(){
+			$this->db->limit(2);
+			$this->db->order_by('count', 'desc');
+			$result = $this->db->get('knowledge')->result();
+			return $result;
 		}
 
 

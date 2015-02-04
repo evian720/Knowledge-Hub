@@ -5,6 +5,9 @@
 require('header.php');
 ?>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<!-- PNotify -->
+<link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.css'?>' media="screen">
+<script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
 
 <!-- style of the tree -->
 <style>
@@ -127,19 +130,25 @@ require('header.php');
                         <div class="label bg-aqua">Updated</div>
                       </div>
                     </div>
-                    <div class="box-body" id="mytree1">
+                    <div class="box-body">
                       <!-- Custom Tabs -->
                       <div class="nav-tabs-custom">
-                        <div class="tab-content" id="tt2">
+                        <div class="tab-content">
+
                           <div class="tab-pane active" id="tab_1">
-                            <div id="mytree" style="height: 527px;"></div>
+                            <div class="row">
+                              <div class="col-md-12" id="mytree"></div>
+                              <div class="col-md-12" id="my_tree_knowledge_area"></div>
+                            </div>
                           </div>
+
                           <div class="tab-pane" id="tab_2">
                             <div class="row">
                               <div class="col-md-6" id="mydirectory"></div>
                               <div class="col-md-6" id="place_for_knowledge"></div>
                             </div>
                           </div><!-- /.tab-pane -->
+
                         </div><!-- /.tab-content -->
                       </div><!-- nav-tabs-custom -->
                     </div><!-- /.box-body -->
@@ -194,7 +203,6 @@ require('footer.php');
       // width = 960 - margin.right - margin.left,   //960
       height = 600 - margin.top - margin.bottom;  //800
       
-
       var width = $('#mytree').width() - margin.right - margin.left - 40;
       //var width = document.getElementById('mytree').offsetWidth - margin.right - margin.left - 40;
       //var height = document.getElementById('mytree').offsetHeight;
@@ -243,7 +251,7 @@ require('footer.php');
     links = tree.links(nodes);
 
     // Normalize for fixed-depth.
-    nodes.forEach(function(d) { d.y = d.depth * 120; });    //180
+    nodes.forEach(function(d) { d.y = d.depth * 100; });    //180
 
     // Update the nodes…
     var node = svg.selectAll("g.node")
@@ -343,6 +351,22 @@ require('footer.php');
           d._children = null;
         }
         update(d);
+
+        //update the knowledge shown besides
+        if(!d.children && !d._children){
+          $.ajax({
+            url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_knowledge_for_tree_by_cat/" + d.cat_name, //this is the submit URL
+            type: 'POST', //or POST
+            success: function(data){
+              $('#my_tree_knowledge_area').html(data);
+              click_to_add();
+            }
+          });
+
+          //menu when click the tree node
+
+        }
+
       }
     }
   }
@@ -499,13 +523,16 @@ require('footer.php');
       if(!d.children && !d._children){
 
         $.ajax({
-          url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_knowledge_for_tree_by_cat/" + d.cat_name, //this is the submit URL
+          url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_knowledge_for_directory_by_cat/" + d.cat_name, //this is the submit URL
           type: 'POST', //or POST
           success: function(data){
             $('#place_for_knowledge').html(data);
 
           }
         });
+
+        //menu when click the tree node
+
       }
     }
 
@@ -520,6 +547,89 @@ require('footer.php');
 
   build_tree();
   build_directory();
+
+
+  function click_to_add(){
+
+
+
+new PNotify({
+    title: 'Choose a Side',
+    text: 'You have three options to choose from.',
+    icon: 'glyphicon glyphicon-question-sign',
+    
+    confirm: {
+        confirm: true,
+        buttons: [{
+            text: 'Fries',
+            addClass: 'btn-primary',
+            click: function(notice) {
+                notice.update({
+                    title: 'You\'ve Chosen a Side',
+                    text: 'You want fries.',
+                    icon: true,
+                    type: 'info',
+                    hide: true,
+                    confirm: {
+                        confirm: false
+                    },
+                    buttons: {
+                        closer: true,
+                        sticker: true
+                    }
+                });
+            }
+        }, {
+            text: 'Mashed Potatoes',
+            click: function(notice) {
+                notice.update({
+                    title: 'You\'ve Chosen a Side',
+                    text: 'You want mashed potatoes.',
+                    icon: true,
+                    type: 'info',
+                    hide: true,
+                    confirm: {
+                        confirm: false
+                    },
+                    buttons: {
+                        closer: true,
+                        sticker: true
+                    }
+                });
+            }
+        }, {
+            text: 'Fruit',
+            click: function(notice) {
+                notice.update({
+                    title: 'You\'ve Chosen a Side',
+                    text: 'You want fruit.',
+                    icon: true,
+                    type: 'info',
+                    hide: true,
+                    confirm: {
+                        confirm: false
+                    },
+                    buttons: {
+                        closer: true,
+                        sticker: true
+                    }
+                });
+            }
+        }]
+    },
+    buttons: {
+        closer: false,
+        sticker: false
+    },
+    history: {
+        history: false
+    },
+    sticker: false,
+    delay: 8000
+});
+
+
+  }
 
   </script>
 

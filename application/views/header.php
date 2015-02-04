@@ -6,8 +6,10 @@
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' media="screen">
-        <!-- Ionicons -->
+        <!-- Ionicons
         <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        -->
+
         <!-- Theme style -->
         <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE.css'?>' media="screen">
 
@@ -31,6 +33,9 @@
         <script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" media="screen">
         <script src='<?=base_url().'assets/datatable/dataTables.bootstrap.js'?>'></script>
+
+        <!-- typeahead -->
+        <script src='<?=base_url().'assets/js/typeahead.js'?>'></script>
 
 
     </head>
@@ -155,7 +160,7 @@
                     <div class="user-panel">
                         <div class="pull-left info">
                             <p>Hello, <?php echo $this->session->userdata('firstname')?></p>
-                            <a><i class="fa fa-thumbs-up"></i> Start to lean some stuff!</a>
+                            <a><i class="fa fa-thumbs-up"></i> Start to learn some stuff!</a>
                         </div>
                     </div>
                     <!-- search form -->
@@ -182,13 +187,30 @@
 
                         <li class="treeview">
                             <a href="#">
-                                <i class="fa fa-search"></i>
-                                <span>View Knowledge</span>
+                                <i class="fa fa-tree"></i>
+                                <span>View My Knowledge</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
                                     <a href="<?php echo base_url() . 'index.php/main/view_knowledge' ?>"><i class="fa fa-angle-double-right"></i> Time Line</a>
+                                </li>
+                                <li>
+                                <a href="<?php echo base_url() . 'index.php/main/view_tree' ?>"><i class="fa fa-angle-double-right"></i> Knowledge Tree</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-search"></i>
+                                <span>Search Knowledge</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="<?php echo base_url() . 'index.php/main/view_knowledge_others' ?>"><i class="fa fa-angle-double-right"></i> Check Peers</a>
                                 </li>
                                 <li>
                                     <a href="<?php echo base_url() . 'index.php/main/view_knowledge_directory' ?>"><i class="fa fa-angle-double-right"></i> Knowledge Directory</a>
@@ -197,11 +219,7 @@
                         </li>
 
                         <li>
-                            <a href="<?php echo base_url() . 'index.php/main/view_tree' ?>"><i class="glyphicon glyphicon-tree-conifer"></i> View My Tree</a>
-                        </li>
-
-                        <li>
-                            <a href="<?php echo base_url() . 'index.php/main/view_knowledge_others' ?>"><i class="glyphicon glyphicon-user"></i> Check Peers</a>
+                            <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i> Recommendation</a>
                         </li>
 
                         <li>

@@ -376,22 +376,26 @@
 				<small>________________________________________________________________</small>
 			</h5>
 
+
+
 			<div class="row">
 				<div class="col-md-4 widget col-md-offset-2">
 					<div class="widget-header">
-						<span>Default Widget Box</span>
+						<span> <?php echo $hottest_knowledge[0]->knowledge_title; ?> </span>
 					</div>
-					<div class="widget-content">
-						<p class="alert alert-info">Hello, I'm a widget box's default body</p>
+					<div class="widget-content" style="height: 100px;">
+						<p style="color: black;"><?php echo $hottest_knowledge[0]->knowledge_description; ?></p>
+						<button class="btn btn-success btn-sm pull-right">Details</button>
 					</div>
 				</div>
 
 				<div class="col-md-4 widget">
 					<div class="widget-header">
-						<span>Default Widget Box</span>
+						<span> <?php echo $hottest_knowledge[1]->knowledge_title; ?> </span>
 					</div>
-					<div class="widget-content">
-						<p class="alert alert-info">Hello, I'm a widget box's default body</p>
+					<div class="widget-content" style="height: 100px;">
+						<p style="color: black;"> <?php echo $hottest_knowledge[1]->knowledge_description; ?> </p>
+						<button class="btn btn-success btn-sm pull-right" style="bottom: 0;">Details</button>
 					</div>
 				</div>
 

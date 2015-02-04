@@ -492,7 +492,7 @@ require('header.php');
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal" style="color: white">No</button>
-              <button type="button" id="confirm_combine" data-dismiss="modal" class="btn btn-success">Yes</button>
+              <button type="button" id="confirm_combine" data-dismiss="modal" class="btn btn-success" onclick="confirmed_request()">Yes</button>
             </div>
           </div>
         </div>
@@ -565,17 +565,16 @@ require('header.php');
 
     // request knowledge
     function send_request(knowledge_id){
-
+      $('#requested_knowledge_id').val(knowledge_id);
       $.ajax({
           url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/check_requested_knowledge_exists/" + knowledge_id, //this is the submit URL
           type: 'POST', //or POST
           success: function(data){
             if(data == 1){
               $('#confirm_request_knowledge_button').click();
-              $('#requested_knowledge_id').val(knowledge_id);
             }
             else{
-              alert("false");
+              confirmed_request();
             }
           }
       });
@@ -592,13 +591,6 @@ require('header.php');
             }
         });
     }
-
-
-      $("#confirm_request_knowledge").on("click", function(e) {
-          confirmed_request();
-      });
-
-
 
     alertify.set({ delay: 2500 });
 

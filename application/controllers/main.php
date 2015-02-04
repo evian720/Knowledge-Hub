@@ -20,6 +20,7 @@ class Main extends CI_Controller {
 	public function login(){
 		$this->load->model('model_knowledge_management');
 		$data['major_selection'] = $this->model_knowledge_management->get_all_major();
+		$data['hottest_knowledge'] = $this->model_knowledge_management->get_hottest_knowledge();
 
 
 		if($this->session->userdata('is_logged_in') == 1 && $this->session->userdata('user_role') == 'student' ){
@@ -485,7 +486,8 @@ class Main extends CI_Controller {
 	// start of request system
 	public function request_knowledge($knowledge_id){
 		$this->load->model('model_knowledge_management');
-		$this->model_knowledge_management->make_knowledge_request($knowledge_id, $this->session->userdata('email'));
+		$check_exists = $this->model_knowledge_management->requested_knowledge_exists($knowledge_id, $this->session->userdata('email'));
+		$this->model_knowledge_management->make_knowledge_request($knowledge_id, $this->session->userdata('email'), $check_exists);
 	}
 
 	public function refresh_header_count(){
@@ -521,10 +523,25 @@ class Main extends CI_Controller {
 
 	// end of request system
 
+
 	public function get_knowledge_for_tree_by_cat($cat_name){
 		$this->load->model('model_knowledge_management');
 		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_for_tree_by_cat($cat_name, $this->session->userdata('email'));
+		$this->load->view('view_update_tree_knowledge', $data);
+	}
+
+	public function get_knowledge_for_directory_by_cat($cat_name){
+		$this->load->model('model_knowledge_management');
+		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_for_tree_by_cat($cat_name, $this->session->userdata('email'));
 		$this->load->view('view_update_directory_knowledge', $data);
+	}
+
+	//for typeahead
+	public function get_knowledge_title(){
+		$this->load->model('model_knowledge_management');
+		$result = $this->model_knowledge_management->get_knowledge_title();
+		//$str = json_encode($result);
+		echo $result;
 	}
 
 
