@@ -122,6 +122,10 @@
 			return $query->user_role;
 		}
 
+		public function get_user_by_email($email){
+			return $this->db->get_where('user', array('email' => $email))->row();
+		}
+
 	}
 
 ?>

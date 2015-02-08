@@ -29,11 +29,11 @@
                 <div class="box-header">
                   <h3 class="box-title">Knowledge Title</h3>
                   <div class="box-tools pull-right">
-                    <div class="btn btn-success btn-sm"></div>
+                    <div class="btn btn-success btn-sm" onclick="modify_knowledge_title()"><i class="fa fa-wrench"></i></div>
                   </div>
                 </div>
                 <div class="box-body">
-                  <p>
+                  <p id="knowledge_title_field">
                     <?php echo $knowledge->knowledge_title; ?>
                   </p>
                 </div><!-- /.box-body -->
@@ -71,7 +71,7 @@
                   <div class="icon">
                     <i class="glyphicon glyphicon-cloud"></i>
                   </div>
-                  <h6><?php echo $user_knowledge->level1_cat; ?></h6>
+                  <h6><?php echo $knowledge->level1_cat; ?></h6>
                 </div>
               </div>
 
@@ -82,7 +82,7 @@
                   <div class="icon">
                     <i class="glyphicon glyphicon-th-large"></i>
                   </div>
-                  <h6><?php echo $user_knowledge->level2_cat; ?></h6>
+                  <h6><?php echo $knowledge->level2_cat; ?></h6>
                 </div>
               </div>
 
@@ -92,7 +92,7 @@
                   <div class="icon">
                     <i class="glyphicon glyphicon-th"></i>
                   </div>
-                  <h6><?php echo $user_knowledge->level3_cat; ?></h6>
+                  <h6><?php echo $knowledge->level3_cat; ?></h6>
                 </div>
               </div>
 
@@ -102,7 +102,7 @@
                   <div class="icon">
                     <i class="glyphicon glyphicon-book"></i>
                   </div>
-                  <h6><?php echo $user_knowledge->level4_cat; ?></h6>
+                  <h6><?php echo $knowledge->level4_cat; ?></h6>
                 </div>
               </div>
 
@@ -182,6 +182,15 @@ foreach ($knowledge_items as $knowledge_item) {
     </form>
     <!--</div> wizard container -->
 
+
+
+    <!-- for store knowledge information -->
+    <input type="hidden" id="store_knowledge_id" value="<?php echo $knowledge->knowledge_id; ?>" />
+
+
+
+
+
 <script type="text/javascript">
   $('#wizard1').bootstrapWizard({
 
@@ -219,8 +228,7 @@ foreach ($knowledge_items as $knowledge_item) {
 
         var $current = index+1;
 
-        
-
+      
         var wizard = navigation.closest('.wizard-card');
 
         
@@ -243,5 +251,23 @@ foreach ($knowledge_items as $knowledge_item) {
 
     }
 
-}); 
+  }); 
+
+  //modeify knowledge
+  $.fn.editable.defaults.mode = 'inline';
+
+  function modify_knowledge_title(){
+    html_content = '<a href="#" id="knowledge_title_text" data-type="text" data-pk=" ' + $('#store_knowledge_id').val() + ' " ><?php echo $knowledge->knowledge_title; ?></a>';
+    $('#knowledge_title_field').html(html_content);
+    $('#knowledge_title_text').editable({
+
+      url: 'http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/edit_knowledge/knowledge_title',
+      success: function(response, newValue) {
+      
+          //location.reload(true);
+      }
+    });
+
+  }
+
 </script>

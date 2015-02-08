@@ -99,26 +99,6 @@ require('header.php');
 
 
 
-  <!-- hidden button for popup modal -->
-  <button type="button" id="view_knowledge_detail_button" class="btn btn-primary btn-sm hidden" data-toggle="modal" data-target="#view_knowledge_detail"></button>
-
-  <!-- modal for create knowledge -->
-  <div class="modal fade" id="view_knowledge_detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body" id="details">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 
 <?php
@@ -137,20 +117,6 @@ require('footer.php');
   $('[data-toggle=confirmation]').on('confirmed.bs.confirmation', function () {
     document.getElementById("delete_button").click();
   });
-
-
-  function update_knowledge_detail(knowledge_id){
-        $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/view_knowledge_detail/" + knowledge_id, //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                    $('#details').html(data);
-                    $('#view_knowledge_detail_button').click();
-                }
-        });
-    }
-  
-
 
 </script>
 

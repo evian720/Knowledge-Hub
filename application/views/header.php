@@ -37,6 +37,10 @@
         <!-- typeahead -->
         <script src='<?=base_url().'assets/js/typeahead.js'?>'></script>
 
+        <!-- editable -->
+        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
 
     </head>
     <body class="skin-black fixed">
@@ -81,40 +85,15 @@
                         <!-- Notifications: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-warning"></i>
-                                <span class="label label-warning">10</span>
+                                <i class="fa fa-check-square-o"></i>
+                                <span class="label label-warning" id="confirmation_count">0</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
+                                <li class="header">Confirmations</li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-people info"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-warning danger"></i> Very long description here that may not fit into the page and may cause design problems
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users warning"></i> 5 new members joined
-                                            </a>
-                                        </li>
+                                    <ul class="menu" id="confirmation_section">
 
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-cart success"></i> 25 sales made
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-person danger"></i> You changed your username
-                                            </a>
-                                        </li>
                                     </ul>
                                 </li>
                                 <li class="footer"><a href="#">View all</a></li>
@@ -249,6 +228,25 @@
                 </div>
             </div>
 
+
+            <!-- modal for view knowledge details -->
+            <button type="button" id="view_knowledge_detail_button" class="btn btn-primary btn-sm hidden" data-toggle="modal" data-target="#view_knowledge_detail"></button>
+            <div class="modal fade" id="view_knowledge_detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" style="width: 95%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body" id="details">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- just show the welcome once -->
             <input type="hidden" id="just_login" value="<?php echo $this->session->userdata('just_login'); ?>" />
 
@@ -278,6 +276,7 @@
                 }
               });
               
+            //refresh for notification
             setInterval(function(){ 
               // ajax
               $.ajax({
@@ -291,6 +290,22 @@
                 }
               });
             }, 5000);
+
+            //refresh for confirmation 
+            setInterval(function(){ 
+              // ajax
+              $.ajax({
+                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/refresh_confirm_count/", //this is the submit URL
+                type: 'POST', //or POST
+                success: function(data){
+                  $("#confirmation_count").text(data);
+                  if(data >= 0){
+                    update_confirmation();
+                  }
+                }
+              });
+            }, 5000);
+
           });
 
           function update_notification(){
@@ -299,6 +314,16 @@
                 type: 'POST', //or POST
                 success: function(data){
                     $('#notification_section').html(data);
+                }
+              });
+          }
+
+            function update_confirmation(){
+              $.ajax({
+                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/refresh_confirm_details/", //this is the submit URL
+                type: 'POST', //or POST
+                success: function(data){
+                    $('#confirmation_section').html(data);
                 }
               });
           }
@@ -339,6 +364,17 @@
                 }
               });
           }
+
+        function update_knowledge_detail(knowledge_id){
+            $.ajax({
+                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/view_knowledge_detail/" + knowledge_id, //this is the submit URL
+                type: 'POST', //or POST
+                success: function(data){
+                    $('#details').html(data);
+                    $('#view_knowledge_detail_button').click();
+                }
+        });
+    }
 
 
 

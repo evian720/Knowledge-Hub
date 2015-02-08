@@ -554,66 +554,16 @@ require('footer.php');
 
 
 new PNotify({
-    title: 'Choose a Side',
-    text: 'You have three options to choose from.',
+    title: 'What do you want?',
+    text: 'Select an action.',
     icon: 'glyphicon glyphicon-question-sign',
     
     confirm: {
         confirm: true,
         buttons: [{
-            text: 'Fries',
-            addClass: 'btn-primary',
+            text: 'New Knowledge',
             click: function(notice) {
-                notice.update({
-                    title: 'You\'ve Chosen a Side',
-                    text: 'You want fries.',
-                    icon: true,
-                    type: 'info',
-                    hide: true,
-                    confirm: {
-                        confirm: false
-                    },
-                    buttons: {
-                        closer: true,
-                        sticker: true
-                    }
-                });
-            }
-        }, {
-            text: 'Mashed Potatoes',
-            click: function(notice) {
-                notice.update({
-                    title: 'You\'ve Chosen a Side',
-                    text: 'You want mashed potatoes.',
-                    icon: true,
-                    type: 'info',
-                    hide: true,
-                    confirm: {
-                        confirm: false
-                    },
-                    buttons: {
-                        closer: true,
-                        sticker: true
-                    }
-                });
-            }
-        }, {
-            text: 'Fruit',
-            click: function(notice) {
-                notice.update({
-                    title: 'You\'ve Chosen a Side',
-                    text: 'You want fruit.',
-                    icon: true,
-                    type: 'info',
-                    hide: true,
-                    confirm: {
-                        confirm: false
-                    },
-                    buttons: {
-                        closer: true,
-                        sticker: true
-                    }
-                });
+              alert("!!!");
             }
         }]
     },

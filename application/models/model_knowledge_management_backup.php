@@ -6,17 +6,11 @@
 				//knowledge table
 			$data_knowledge =  array(
 					'knowledge_id' => '',
-					'user_name' => $this->session->userdata('email'),
 					'knowledge_title' => $this->input->post('knowledge_title'),
 					'knowledge_description' => $this->input->post('knowledge_description'),
 					'knowledge_owner' => $this->session->userdata('email'),
 					'count' => 1,
 					'sharing_mode' => '',
-					'level1_cat' => $this->input->post('selected_area'),
-					'level2_cat' => $this->input->post('selected_major'),
-					'level3_cat' => $this->input->post('selected_subject'),
-					'level4_cat' => $this->input->post('selected_chapter'),
-					'orignal_knowledge_id' => '',
 					'reference_knowledge_id' => '',
 					'created_time' => date("Y-m-d H:i:s")
 				);
@@ -166,21 +160,20 @@
 				$this->db->update('category', array('count' => $new_count));
 			}
 
-			//modify to combine the knowledge & user_knowledge
 			//user_knowledge table
-			// $data_user_knowledge = array(
-			// 		'user_knowledge_id' => "",
-			// 		'user_name' => $this->session->userdata('email'),
-			// 		'knowledge_id' => $knowledge_id,
-			// 		'level1_cat' => $cat_area,
-			// 		'level2_cat' => $cat_major,
-			// 		'level3_cat' => $cat_subject,
-			// 		'level4_cat' => $cat_chapter,
-			// 		'sharing_mode' => "",
-			// 		'reference_knowledge_id' => 'NULL',
-			// 		'created_time' => date("Y-m-d H:i:s")
-			// 	);
-			// $this->db->insert('user_knowledge', $data_user_knowledge);
+			$data_user_knowledge = array(
+					'user_knowledge_id' => "",
+					'user_name' => $this->session->userdata('email'),
+					'knowledge_id' => $knowledge_id,
+					'level1_cat' => $cat_area,
+					'level2_cat' => $cat_major,
+					'level3_cat' => $cat_subject,
+					'level4_cat' => $cat_chapter,
+					'sharing_mode' => "",
+					'reference_knowledge_id' => 'NULL',
+					'created_time' => date("Y-m-d H:i:s")
+				);
+			$this->db->insert('user_knowledge', $data_user_knowledge);
 
 
 			//insert to knowledge_cat table
@@ -219,7 +212,7 @@
 		}
 
 		public function get_knowledge_id($knowledge_description, $user_name){
-			$this->db->where('user_name', $user_name);
+			$this->db->where('knowledge_owner', $user_name);
 			$this->db->where('knowledge_description', $knowledge_description);
 			$query = $this->db->get('knowledge')->row();
 			return $query->knowledge_id;
@@ -237,26 +230,28 @@
 		}
 
 		public function count_knowledge($email){
-			return $this->db->get_where('knowledge', array('user_name' => $email))->num_rows();
+			return $this->db->get_where('user_knowledge', array('user_name' => $email))->num_rows();
 		}
 
 		public function get_knowledge($email){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('user_knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->join('knowledge_cat', 'knowledge.knowledge_id = knowledge_cat.knowledge_id');
-			$this->db->where('knowledge.user_name', $email);
-			$this->db->order_by('knowledge.created_time', 'desc');
+			$this->db->where('user_knowledge.user_name', $email);
+			$this->db->order_by('user_knowledge.created_time', 'desc');
 			$query = $this->db->get()->result();
 			return $query;
 		}
 
 		public function get_knowledge_pagination($email, $limit, $start){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->join('knowledge_cat', 'knowledge.knowledge_id = knowledge_cat.knowledge_id');
-			$this->db->where('knowledge.user_name', $email);
+			$this->db->where('user_knowledge.user_name', $email);
 			$this->db->limit($limit,$start);
-			$this->db->order_by('knowledge.created_time', 'desc');
+			$this->db->order_by('user_knowledge.created_time', 'desc');
 			$query = $this->db->get()->result();
 			return $query;
 		}
@@ -265,10 +260,9 @@
 			return $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_id))->row();
 		}
 
-		// seems no usage
-		// public function get_user_knowledge_by_knowledge_id($knowledge_id){
-		// 	return $this->db->get_where('user_knowledge', array('knowledge_id' => $knowledge_id))->row();
-		// }
+		public function get_user_knowledge_by_knowledge_id($knowledge_id){
+			return $this->db->get_where('user_knowledge', array('knowledge_id' => $knowledge_id))->row();
+		}
 
 		public function get_knowledge_item($knowledge_id){
 			return $this->db->get_where('knowledge_item', array('knowledge_id' => $knowledge_id))->result();
@@ -284,7 +278,7 @@
 
 			//delete user_knowledge
 			$this->db->where(array('knowledge_id' => $knowledge_id, 'user_name' => $user_name));
-			$this->db->delete('knowledge');
+			$this->db->delete('user_knowledge');
 
 			//update knowledge table
 			$this->db->where('knowledge_id', $knowledge_id);
@@ -394,69 +388,73 @@
 		}
 
 		public function count_knowledge_by_area($area){
-			return $this->db->get_where('knowledge', array('level1_cat' => $area))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level1_cat' => $area))->num_rows();
 		}
 
 		public function count_knowledge_by_major($major){
-			return $this->db->get_where('knowledge', array('level2_cat' => $major))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level2_cat' => $major))->num_rows();
 		}
 
 		public function count_knowledge_by_subject($subject){
-			return $this->db->get_where('knowledge', array('level3_cat' => $subject))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level3_cat' => $subject))->num_rows();
 		}
 
 		public function count_knowledge_by_chapter($chapter){
-			return $this->db->get_where('knowledge', array('level4_cat' => $chapter))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level4_cat' => $chapter))->num_rows();
 		}
 
 
 		//others' knowledge
 		public function count_others_knowledge_by_area($area, $user_name){
-			return $this->db->get_where('knowledge', array('level1_cat' => $area, 'user_name !=' => $user_name))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level1_cat' => $area, 'user_name !=' => $user_name))->num_rows();
 		}
 
 		public function count_others_knowledge_by_major($major, $user_name){
-			return $this->db->get_where('knowledge', array('level2_cat' => $major, 'user_name !=' => $user_name))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level2_cat' => $major, 'user_name !=' => $user_name))->num_rows();
 		}
 
 		public function count_others_knowledge_by_subject($subject, $user_name){
-			return $this->db->get_where('knowledge', array('level3_cat' => $subject, 'user_name !=' => $user_name))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level3_cat' => $subject, 'user_name !=' => $user_name))->num_rows();
 		}
 
 		public function count_others_knowledge_by_chapter($chapter, $user_name){
-			return $this->db->get_where('knowledge', array('level4_cat' => $chapter, 'user_name !=' => $user_name))->num_rows();
+			return $this->db->get_where('user_knowledge', array('level4_cat' => $chapter, 'user_name !=' => $user_name))->num_rows();
 		}
 		//end of others' knowledge
 
 		public function get_knowledge_by_area($area, $limit, $start){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level1_cat' => $area));
+			$this->db->where(array('user_knowledge.level1_cat' => $area));
 			return $this->db->get()->result();
 		}
 
 		public function get_knowledge_by_major($major, $limit, $start){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level2_cat' => $major));
+			$this->db->where(array('user_knowledge.level2_cat' => $major));
 			return $this->db->get()->result();
 		}
 
 		public function get_knowledge_by_subject($subject, $limit, $start){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level3_cat' => $subject));
+			$this->db->where(array('user_knowledge.level3_cat' => $subject));
 			return $this->db->get()->result();
 		}
 
 		public function get_knowledge_by_chapter($chapter, $limit, $start){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('knowledge.level4_cat' => $chapter));
+			$this->db->where(array('user_knowledge.level4_cat' => $chapter));
 			return $this->db->get()->result();
 		}
 
@@ -464,33 +462,37 @@
 		//others' knowledge
 		public function get_others_knowledge_by_area($area, $limit, $start, $user_name){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level1_cat' => $area, 'user_name !=' => $user_name));
+			$this->db->where(array('user_knowledge.level1_cat' => $area, 'user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_major($major, $limit, $start, $user_name){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level2_cat' => $major, 'user_name !=' => $user_name));
+			$this->db->where(array('user_knowledge.level2_cat' => $major, 'user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_subject($subject, $limit, $start, $user_name){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level3_cat' => $subject, 'user_name !=' => $user_name));
+			$this->db->where(array('user_knowledge.level3_cat' => $subject, 'user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_chapter($chapter, $limit, $start, $user_name){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level4_cat' => $chapter, 'user_name !=' => $user_name));
+			$this->db->where(array('user_knowledge.level4_cat' => $chapter, 'user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 		//end of others' knowledge
@@ -498,7 +500,8 @@
 
 		public function get_knowledge_with_cat(){
 			$this->db->select('*');
-			$this->db->from('knowledge');
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
 			return $this->db->get()->result();
 		}
 
@@ -512,7 +515,6 @@
 					'knowledge_id' => $knowledge_id,
 					'approved' => 0,
 					'read' => 0,
-					'confirmed' => 0,
 					'knowledge_exists' =>$check_exists,
 					'request_time' => date("Y-m-d H:i:s")
 				);
@@ -533,43 +535,10 @@
 			$this->db->order_by('knowledge_request.request_time', 'desc');
 			return $this->db->get()->result();
 		}
-
-		public function get_confirmation_count($user_name){
-			return $this->db->get_where('knowledge_request', array('request_sender' => $user_name, 'approved' => 1, 'confirmed' => 0))->num_rows();
-		}
-
-		public function get_confirmation_details($user_name){
-			$this->db->select('*');
-			$this->db->from('knowledge_request');
-			$this->db->join('knowledge', 'knowledge.knowledge_id = knowledge_request.knowledge_id');
-			$this->db->join('user', 'knowledge_request.request_sender = user.email');
-			$this->db->where(array('request_sender' => $user_name, 'approved' => 1, 'confirmed' => 0));
-			$this->db->order_by('knowledge_request.request_time', 'desc');
-			return $this->db->get()->result();
-		}
-
+		
 		public function accept_knowledge_request($knowledge_request_id){
 			$this->db->where('knowledge_request_id', $knowledge_request_id);
 			$this->db->update('knowledge_request', array('approved' => 1, 'read' => 1));
-		}
-
-		public function get_requested_knowledge($knowledge_request_id){
-			$this->db->select("");
-			$this->db->from("knowledge_request");
-			$this->db->join('knowledge', 'knowledge_request.knowledge_id = knowledge.knowledge_id');
-			$this->db->where('knowledge_request_id', $knowledge_request_id);
-			return $this->db->get()->row();
-		}
-
-		public function get_requested_knowledge_item($knowledge_request_id){
-			$knowledge_id = $this->db->get_where('knowledge_request', array('knowledge_request_id' => $knowledge_request_id))->row()->knowledge_id;
-			return $this->db->get_where('knowledge_item', array('knowledge_id'=>$knowledge_id))->result();
-		}
-		
-
-		//accept changed to confirm
-		public function confirm_knowledge_request($knowledge_request_id){
-
 
 			//copy & paste the new knowledge
 			$knowledge_request = $this->db->get_where('knowledge_request', array('knowledge_request_id' => $knowledge_request_id))->row();
@@ -579,34 +548,31 @@
 				
 				$this->db->select("*");
 				$this->db->from('knowledge');
-				$this->db->where(array('knowledge_title' => $replace_title , 'user_name' => $knowledge_request->request_sender));
+				$this->db->join('user_knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
+				$this->db->where(array('knowledge.knowledge_title' => $replace_title , 'user_knowledge.user_name' => $knowledge_request->request_sender));
 				$user_knowledge_id = $this->db->get()->row()->user_knowledge_id;
 
-				$this->db->where('knowledge_id',$user_knowledge_id);
-				$this->db->update('knowledge', array('reference_knowledge_id' => $knowledge_request->knowledge_id));
+				$this->db->where('user_knowledge_id',$user_knowledge_id);
+				$this->db->update('user_knowledge', array('reference_knowledge_id' => $knowledge_request->knowledge_id));
 
 			}else{
 			
 				//get the user_knowledge
-				$knowledge_to_copy = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row();
+				$knowledge_to_copy = $this->db->get_where('user_knowledge', array('knowledge_id' => $knowledge_request->knowledge_id, 'user_name' => $knowledge_request->request_receiver))->row();
 				//insert into db for new user
 				$knowledge_for_new_user = array(
-							'knowledge_id' => '',
+							'user_knowledge_id' => '',
 							'user_name' => $knowledge_request->request_sender,
-							'knowledge_title' => $knowledge_to_copy->knowledge_title,
-							'knowledge_description' => $knowledge_to_copy->knowledge_description,
-							'knowledge_owner' => $knowledge_to_copy->knowledge_owner,
-							'count' => '',
-							'sharing_mode' => '',
+							'knowledge_id' => $knowledge_request->knowledge_id,
 							'level1_cat' => $knowledge_to_copy->level1_cat,
 							'level2_cat' => $knowledge_to_copy->level2_cat,
 							'level3_cat' => $knowledge_to_copy->level3_cat,
 							'level4_cat' => $knowledge_to_copy->level4_cat,
-							'orignal_knowledge_id' => $knowledge_to_copy->knowledge_id,
+							'sharing_mode' => 'public',
 							'reference_knowledge_id' => 'NULL',
 							'created_time' => date("Y-m-d H:i:s")
 						);
-				$this->db->insert('knowledge', $knowledge_for_new_user);
+				$this->db->insert('user_knowledge', $knowledge_for_new_user);
 
 				//update user category
 					//level 1 category
@@ -665,23 +631,8 @@
 				$new_count = $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_request->knowledge_id))->row()->count + 1;
 				$this->db->where('knowledge_id', $knowledge_request->knowledge_id);
 				$this->db->update('knowledge', array('count' => $new_count));
-
-				//update knowledge_cat table
-				$new_knowledge_id = $this->get_knowledge_id($knowledge_to_copy->knowledge_description, $knowledge_request->request_sender);
-				$knowledge_cat_data = array(
-						'knowledge_cat_id' => '',
-						'knowledge_id' => $new_knowledge_id,
-						'cat_id' => $this->get_user_category_id($knowledge_to_copy->level4_cat, $knowledge_request->request_sender),
-						'created_time' =>date("Y-m-d H:i:s")
-					);
-				$this->db->insert('knowledge_cat', $knowledge_cat_data);
 			}
 		}
-
-		public function get_user_category_id($cat_name, $cat_owner){
-			return $this->db->get_where('user_category', array('cat_name'=> $cat_name, 'cat_owner' => $cat_owner))->row()->cat_id;
-		}
-
 
 		public function reject_knowledge_request($knowledge_request_id){
 			$this->db->where('knowledge_request_id', $knowledge_request_id);
@@ -693,9 +644,10 @@
 			$requsted_knowledge = $this->get_knowledge_by_id($knowledge_id);
 			$query = "
 				SELECT *
-				FROM knowledge k
-				WHERE k.knowledge_title = '" . $requsted_knowledge->knowledge_title . "'
-				AND k.user_name = '" . $username . "'
+				FROM knowledge k, user_knowledge uk
+				WHERE k.knowledge_id = uk.knowledge_id
+				AND k.knowledge_title = '" . $requsted_knowledge->knowledge_title . "'
+				AND uk.user_name = '" . $username . "'
 			";
 			
 			$result = $this->db->query($query)->num_rows();
@@ -707,8 +659,9 @@
 		public function get_knowledge_for_tree_by_cat($cat_name, $user_name){
 			$cat_name = str_replace("%20", " ", $cat_name);
 			$this->db->select('*');
-			$this->db->from('knowledge');
-			$this->db->where(array('level4_cat' => $cat_name, 'user_name' => $user_name));
+			$this->db->from('user_knowledge');
+			$this->db->join('knowledge', 'knowledge.knowledge_id = user_knowledge.knowledge_id');
+			$this->db->where(array('user_knowledge.level4_cat' => $cat_name, 'user_knowledge.user_name' => $user_name));
 			return $this->db->get()->result();
 		}
 

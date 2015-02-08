@@ -145,10 +145,10 @@
 						<!-- Reset Password -->
 						<section id="forget-form" class="login-inner-form" data-angle="180">
 							<h1>Reset Password</h1>
-							<form class="form-vertical" action="user_management/resetpassword.php">
+							<form class="form-vertical" action="<?=base_url().'index.php/main/reset_password'?>">
 								<div class="control-group">
 									<div class="controls">
-										<input type="text" class="big" placeholder="Enter Your Email...">
+										<input type="text" class="big" name="reset_password_email" placeholder="Enter Your Email...">
 									</div>
 								</div>
 								<div class="form-actions">

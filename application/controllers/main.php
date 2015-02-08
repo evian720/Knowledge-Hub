@@ -210,6 +210,8 @@ class Main extends CI_Controller {
 		$this->session->set_userdata(array('just_login' => 0));
 	}
 
+
+
 //=================================================================================================================
 //=================================================================================================================
 //																												  #
@@ -317,7 +319,6 @@ class Main extends CI_Controller {
 	public function view_knowledge_detail($knowledge_id){
 		$this->load->model('model_knowledge_management');
 		$data['knowledge'] = $this->model_knowledge_management->get_knowledge_by_id($knowledge_id);
-		$data['user_knowledge'] = $this->model_knowledge_management->get_user_knowledge_by_knowledge_id($knowledge_id);
 		$data['knowledge_items'] = $this->model_knowledge_management->get_knowledge_item($knowledge_id);
 		$this->load->view('modal_knowledge_details', $data);
 	}
@@ -503,7 +504,34 @@ class Main extends CI_Controller {
 		$this->load->view('view_notification', $data);
 	}
 
+	public function refresh_confirm_count(){
+		$this->load->model('model_knowledge_management');
+		$data['notification_count'] = $this->model_knowledge_management->get_confirmation_count($this->session->userdata('email'));
+
+		echo $data['notification_count'];
+	}
+
+	public function refresh_confirm_details(){
+		$this->load->model('model_knowledge_management');
+		$data['confirmations'] = $this->model_knowledge_management->get_confirmation_details($this->session->userdata('email'));
+		$this->load->view('view_confirmation', $data);
+	}
+
+	public function request_confirmation($knowledge_request_id){
+		$this->load->model('model_knowledge_management');
+		$data['knowledge_requested'] = $this->model_knowledge_management->get_requested_knowledge($knowledge_request_id);
+		$data['knowledge_item_requested'] = $this->model_knowledge_management->get_requested_knowledge_item($knowledge_request_id);
+
+		$this->load->view('view_confirm_knowledge_request', $data);
+	}
+
 	public function accept_knowledge_request($knowledge_request_id){
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->accept_knowledge_request($knowledge_request_id);
+		
+	}
+
+	public function confirm_knowledge_request($knowledge_request_id){
 		$this->load->model('model_knowledge_management');
 		$this->model_knowledge_management->accept_knowledge_request($knowledge_request_id);
 		
@@ -542,6 +570,13 @@ class Main extends CI_Controller {
 		$result = $this->model_knowledge_management->get_knowledge_title();
 		//$str = json_encode($result);
 		echo $result;
+	}
+
+	public function edit_knowledge($edit_field){
+		$knowledge_id = $this->input->post('pk');
+		$new_value = $this->input->post('value');
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->update_knowledge($knowledge_id, $new_value, $edit_field);
 	}
 
 
