@@ -525,6 +525,17 @@ class Main extends CI_Controller {
 		$this->load->view('view_confirm_knowledge_request', $data);
 	}
 
+	public function submit_knowledge_request_confirmation(){
+		//print_r($this->input->post('knowledge_item_selected'));
+		$knowledge_request_id = $this->input->post('knowledge_request_id');
+		$selected_knowledge_items = $this->input->post('knowledge_item_selected');
+
+		$this->load->model("model_knowledge_management");
+		$this->model_knowledge_management->confirm_knowledge_request($knowledge_request_id, $selected_knowledge_items);
+
+		$this->view_knowledge();	
+	}
+
 	public function accept_knowledge_request($knowledge_request_id){
 		$this->load->model('model_knowledge_management');
 		$this->model_knowledge_management->accept_knowledge_request($knowledge_request_id);

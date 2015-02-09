@@ -568,7 +568,7 @@
 		
 
 		//accept changed to confirm
-		public function confirm_knowledge_request($knowledge_request_id){
+		public function confirm_knowledge_request($knowledge_request_id, $selected_knowledge_items){
 
 
 			//copy & paste the new knowledge
@@ -582,8 +582,23 @@
 				$this->db->where(array('knowledge_title' => $replace_title , 'user_name' => $knowledge_request->request_sender));
 				$user_knowledge_id = $this->db->get()->row()->user_knowledge_id;
 
+
 				$this->db->where('knowledge_id',$user_knowledge_id);
 				$this->db->update('knowledge', array('reference_knowledge_id' => $knowledge_request->knowledge_id));
+
+				//add knowledge items
+				foreach ($selected_knowledge_items as $knowledge_item ) {
+					$knowledge_item_data = array(
+							'knowledge_item_id' => '',
+							'knowledge_id' => $user_knowledge_id,
+							'knowledge_item_title' => $knowledge_item->knowledge_item_title,
+							'knowledge_item_content' => $knowledge_item->knowledge_item_content,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+
+					$this->db->insert('knowledge_item', $knowledge_item_data);
+				}
+
 
 			}else{
 			
@@ -607,6 +622,22 @@
 							'created_time' => date("Y-m-d H:i:s")
 						);
 				$this->db->insert('knowledge', $knowledge_for_new_user);
+
+				$new_knowledge_id = $this->get_knowledge_id($knowledge_to_copy->knowledge_description, $knowledge_request->request_sender);
+				//add knowledge items
+				foreach ($selected_knowledge_items as $knowledge_item ) {
+					$knowledge_item_to_copy = $this->db->get_where('knowledge_item', array('knowledge_item_id' => $knowledge_item))->row();
+
+					$knowledge_item_data = array(
+							'knowledge_item_id' => '',
+							'knowledge_id' => $new_knowledge_id,
+							'knowledge_item_title' => $knowledge_item_to_copy->knowledge_item_title,
+							'knowledge_item_content' => $knowledge_item_to_copy->knowledge_item_content,
+							'created_time' => date("Y-m-d H:i:s")
+						);
+
+					$this->db->insert('knowledge_item', $knowledge_item_data);
+				}
 
 				//update user category
 					//level 1 category
@@ -676,6 +707,10 @@
 					);
 				$this->db->insert('knowledge_cat', $knowledge_cat_data);
 			}
+
+			//update the knowledge request
+			$this->db->where('knowledge_request_id', $knowledge_request_id);
+			$this->db->update('knowledge_request', array('confirmed' => 1));
 		}
 
 		public function get_user_category_id($cat_name, $cat_owner){
