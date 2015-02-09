@@ -533,7 +533,7 @@ class Main extends CI_Controller {
 		$this->load->model("model_knowledge_management");
 		$this->model_knowledge_management->confirm_knowledge_request($knowledge_request_id, $selected_knowledge_items);
 
-		$this->view_knowledge();	
+		redirect('index.php/main/view_knowledge');
 	}
 
 	public function accept_knowledge_request($knowledge_request_id){

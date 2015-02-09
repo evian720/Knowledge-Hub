@@ -580,7 +580,7 @@
 				$this->db->select("*");
 				$this->db->from('knowledge');
 				$this->db->where(array('knowledge_title' => $replace_title , 'user_name' => $knowledge_request->request_sender));
-				$user_knowledge_id = $this->db->get()->row()->user_knowledge_id;
+				$user_knowledge_id = $this->db->get()->row()->knowledge_id;
 
 
 				$this->db->where('knowledge_id',$user_knowledge_id);
@@ -588,17 +588,17 @@
 
 				//add knowledge items
 				foreach ($selected_knowledge_items as $knowledge_item ) {
+					$knowledge_item_to_copy = $this->db->get_where('knowledge_item', array('knowledge_item_id' => $knowledge_item))->row();
 					$knowledge_item_data = array(
 							'knowledge_item_id' => '',
 							'knowledge_id' => $user_knowledge_id,
-							'knowledge_item_title' => $knowledge_item->knowledge_item_title,
-							'knowledge_item_content' => $knowledge_item->knowledge_item_content,
+							'knowledge_item_title' => $knowledge_item_to_copy->knowledge_item_title,
+							'knowledge_item_content' => $knowledge_item_to_copy->knowledge_item_content,
 							'created_time' => date("Y-m-d H:i:s")
 						);
 
 					$this->db->insert('knowledge_item', $knowledge_item_data);
 				}
-
 
 			}else{
 			
