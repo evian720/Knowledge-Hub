@@ -48,9 +48,11 @@ class Main extends CI_Controller {
 	}
 
 	public function dashboard(){
+		$this->load->model('model_knowledge_management');
+		$data['to_do_list'] = $this->model_knowledge_management->get_to_do_list($this->session->userdata('email'));
 
 		if($this->session->userdata('is_logged_in')){
-			$this->load->view('view_dashboard');
+			$this->load->view('view_dashboard', $data);
 		}
 		else{
 			$this->load->view('restricted');
@@ -590,7 +592,29 @@ class Main extends CI_Controller {
 		$this->model_knowledge_management->update_knowledge($knowledge_id, $new_value, $edit_field);
 	}
 
+	public function create_to_do_list(){
+		$to_do_content = $this->input->post('to_do_content');
+		$label = $this->input->post('lable_selection');
 
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->create_to_do($this->session->userdata('email'), $to_do_content, $label);
+	}
+
+	public function update_to_do_list(){
+		$this->load->model('model_knowledge_management');
+		$data['to_do_list'] = $this->model_knowledge_management->get_to_do_list($this->session->userdata('email'));
+		$this->load->view('view_update_to_do_list', $data);
+	}
+
+	public function delete_to_do_list($to_do_list_id){
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->delete_to_do_list($to_do_list_id);
+	}
+
+	public function update_to_do_list_status($to_do_list_id){
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->update_to_do_list_status($to_do_list_id);
+	}
 
 
 //=================================================================================================================
@@ -642,6 +666,22 @@ class Main extends CI_Controller {
 		$this->model_knowledge_management->delete_category($cat_id);
 
 		$this->category_management();
+	}
+
+
+//=================================================================================================================
+//=================================================================================================================
+//																												  #
+//												Recommendation System											  #
+//																												  #
+//=================================================================================================================
+//=================================================================================================================
+
+	public function recommend(){
+		$this->load->model('model_recommendation');
+		$this->model_recommendation->create_dataset();
+		//$this->model_recommendation->update_recommendation_table();
+
 	}
 	
 	

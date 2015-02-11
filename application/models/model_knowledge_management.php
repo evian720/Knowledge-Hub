@@ -757,7 +757,43 @@
 		    file_put_contents($file, $str);
 		}
 
+		public function create_to_do($email, $content, $label){
+			$to_do_data = array(
+					'to_do_list_id' => '',
+					'user_name' => $email,
+					'content' => $content,
+					'status' => 0,
+					'label' => $label,
+					'created_time' => date("Y-m-d H:i:s")
+				);
 
+			$this->db->insert('to_do_list', $to_do_data);
+		}
+
+		public function get_to_do_list($email){
+			$this->db->select("*");
+			$this->db->from('to_do_list');
+			$this->db->where(array('user_name'=>$email));
+			$this->db->order_by('created_time', 'desc');
+			$result = $this->db->get()->result();
+			return $result;
+		}
+
+		public function delete_to_do_list($to_do_list_id){
+			$this->db->where('to_do_list_id', $to_do_list_id);
+			$this->db->delete('to_do_list');
+		}
+
+		public function update_to_do_list_status($to_do_list_id){
+			$current_status = $this->db->get_where('to_do_list', array('to_do_list_id'=>$to_do_list_id))->row()->status;
+			if ( $current_status == 0) {
+				$this->db->where('to_do_list_id', $to_do_list_id);
+				$this->db->update('to_do_list', array('status'=>1));
+			}else{
+				$this->db->where('to_do_list_id', $to_do_list_id);
+				$this->db->update('to_do_list', array('status'=>0));
+			}
+		}
 
 //=================================================================================================================
 //=================================================================================================================
