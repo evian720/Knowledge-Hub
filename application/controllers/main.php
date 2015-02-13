@@ -679,8 +679,18 @@ class Main extends CI_Controller {
 
 	public function recommend(){
 		$this->load->model('model_recommendation');
-		$this->model_recommendation->create_dataset();
-		//$this->model_recommendation->update_recommendation_table();
+		//$data['recommendations'] is an array with knowledge name as key and score as value
+		$data['recommendations'] = $this->model_recommendation->get_knowledge_recommendation($this->session->userdata('email'));
+		if( count($data['recommendations']) ){
+			$data['blind_spot_knowledge'] = $this->model_recommendation->get_knowledge_by_recommendation_array($data['recommendations']);
+		}else{
+			$data['blind_spot_knowledge'] = array();
+		}
+
+		$this->load->model('model_knowledge_management');
+		$data['hottest_knowledge'] = $this->model_knowledge_management->get_hottest_knowledge_for_recommendation();
+		
+		$this->load->view('view_recommendation', $data);
 
 	}
 	

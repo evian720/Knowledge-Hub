@@ -77,68 +77,40 @@
 				
 			}
 
-			print_r($dataset);
-			echo "<br><br>";
-			echo "<br><br>";
+			return $dataset;
+		}
 
-			// $books =  array(
+		public function get_knowledge_recommendation($email){
 
-			// 	"phil" => array("my girl" => 2.5, "the god delusion" => 3.5,
-			// 		"tweak" => 3, "the shack" => 4,
-			// 		"the birds in my life" => 2.5,
-			// 		"new moon" => 3.5),
-
-			// 	"sameer" => array("the last lecture" => 2.5, "the god delusion" => 3.5,
-			// 		"the noble wilds" => 3, "the shack" => 3.5,
-			// 		"the birds in my life" => 2.5, "new moon" => 1),
-
-			// 	"john" => array("a thousand splendid suns" => 5, "the secret" => 3.5,
-			// 		"tweak" => 1),
-
-			// 	"peter" => array("chaos" => 5, "php in action" => 3.5),
-
-			// 	"jill" => array("the last lecture" => 1.5, "the secret" => 2.5,
-			// 		"the noble wilds" => 4, "the host: a novel" => 3.5,
-			// 		"the world without end" => 2.5, "new moon" => 3.5),
-
-			// 	"bruce" => array("the last lecture" => 3, "the hollow" => 1.5,
-			// 		"the noble wilds" => 3, "the shack" => 3.5,
-			// 		"the appeal" => 2, "new moon" => 3),
-
-			// 	"tom" => array("chaos" => 2.5)
-
-
-			// 	);
-
-			// print_r($books);
-			// echo "<br><br>";
-			// echo "<br><br>";
-
+			$dataset = $this->create_dataset();
 			$re = new Recommend();
-			print_r($re->getRecommendations($dataset, "testing1@gmail.com"));
 
-
-			echo "<br><br>";
-			$new_dataset = $re->transformPreferences($dataset);
-			$re2 = new Recommend();
-			print_r($re2->getRecommendations($new_dataset, "CAPM"));
-
-
-
-			// $re = new Recommend();
-			// print_r($re->getRecommendations($books, "tom"));
-
-
-			//print_r($level4_cat_result);
-			//print_r($unique_chapter_level_cat);
+			return $re->getRecommendations($dataset, $email);
+			
+			// $new_dataset = $re->transformPreferences($dataset);
+			// $re2 = new Recommend();
+			// print_r($re2->getRecommendations($new_dataset, "CAPM"));
 
 		}
 
-		public function generate_dataset(){
+
+		public function get_knowledge_by_recommendation_array($recommendations){
+			$knowledge_name_array = array();
+			foreach ($recommendations as $key => $value) {
+				array_push($knowledge_name_array, $key);
+			}
+
+			$this->db->where_in('knowledge_title', $knowledge_name_array);
+			$this->db->where('reference_knowledge_id', 0);
+			$this->db->order_by('count');
+			
+			return $this->db->get('knowledge')->result();
 
 		}
+
 
 	}//end of the class
+
 
 	class Recommend {
 
@@ -152,8 +124,15 @@
 			//check whether person1 and person2 have the same preference
 			foreach($preferences[$person1] as $key=>$value)
 			{
-				if(array_key_exists($key, $preferences[$person2]))
-					$similar[$key] = 1;
+				// if(array_key_exists($key, $preferences[$person2]))
+				// 	$similar[$key] = 1;
+
+				//added for detected whether the similarity > 30%
+				foreach ($preferences[$person2] as $key1 => $value1) {
+					if( $this->title_similar($key, $key1) > 30 ){
+						$similar[$key] = 1;
+					}
+				}
 			}
 
 			//end the function if 2 people have no same preference at all
@@ -163,8 +142,15 @@
 			//add up the squares of all the differences
 			foreach($preferences[$person1] as $key=>$value)
 			{
-				if(array_key_exists($key, $preferences[$person2]))
-					$sum = $sum + pow($value - $preferences[$person2][$key], 2);
+				// if(array_key_exists($key, $preferences[$person2]))
+				// 	$sum = $sum + pow($value - $preferences[$person2][$key], 2);
+
+				//added for detected whether the similarity > 30%
+				foreach ($preferences[$person2] as $key1 => $value1) {
+					if( $this->title_similar($key, $key1) > 30 ){
+						$sum = $sum + pow($value - $value1, 2);
+					}
+				}
 			}
 
 			//the larger the sum, the further the distance, the less the similarity
@@ -269,6 +255,27 @@
 
 			return $result;
 		}
+
+		//compare the title similarity
+		public function title_similar($title_1,$title_2) {
+			$title_1 = $this->get_real_title($title_1);
+			$title_2 = $this->get_real_title($title_2);
+			similar_text($title_1, $title_2, $percent);
+			return $percent;
+		}
+
+		public function get_real_title($str){
+			$str = str_replace(array('-','—','|'),'_',$str);
+			$splits = explode('_', $str);
+			$l = 0;
+			foreach ($splits as $tp){
+				$len = strlen($tp);
+				if ($l < $len){$l = $len;$tt = $tp;}
+			}
+			$tt = trim(htmlspecialchars($tt));
+			return $tt;
+		}
+
 
 	}
 

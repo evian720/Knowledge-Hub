@@ -293,8 +293,8 @@
 			$this->db->update('knowledge', array('count' => $new_count));
 
 			//delete knowledge_cat
-			//$this->db->where('knowledge_id', $knowledge_id);
-			//$this->db->delete('knowledge_cat');
+			$this->db->where('knowledge_id', $knowledge_id);
+			$this->db->delete('knowledge_cat');
 
 		}
 
@@ -795,6 +795,21 @@
 			}
 		}
 
+		public function get_hottest_knowledge(){
+			$this->db->limit(2);
+			$this->db->order_by('count', 'desc');
+			$result = $this->db->get('knowledge')->result();
+			return $result;
+		}
+
+
+		public function get_hottest_knowledge_for_recommendation(){
+			$this->db->limit(5);
+			$this->db->order_by('count', 'desc');
+			$result = $this->db->get('knowledge')->result();
+			return $result;
+		}
+
 //=================================================================================================================
 //=================================================================================================================
 //																												  #
@@ -924,12 +939,6 @@
 			$this->db->delete('category');
 		}
 
-		public function get_hottest_knowledge(){
-			$this->db->limit(2);
-			$this->db->order_by('count', 'desc');
-			$result = $this->db->get('knowledge')->result();
-			return $result;
-		}
 
 
 		public function update_knowledge($knowledge_id, $new_value, $edit_field){

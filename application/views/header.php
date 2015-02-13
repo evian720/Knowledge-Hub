@@ -198,7 +198,7 @@
                         </li>
 
                         <li>
-                            <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i> Recommendation</a>
+                            <a href="<?php echo base_url() . 'index.php/main/recommend' ?>"><i class="fa fa-thumbs-o-up"></i> Recommendation</a>
                         </li>
 
                         <li>
