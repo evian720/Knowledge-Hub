@@ -49,7 +49,7 @@ require('header.php');
                                                 <div class="col-lg-8" col-lg-offset-2>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="checkbox" name="knowledge_item_selected[]" value=" ' . $knowledge_item->knowledge_item_id . ' ">
+                                                            <input type="checkbox" name="knowledge_item_selected[]" value=" ' . $knowledge_item->knowledge_item_id . ' " checked>
                                                         </span>
 
                                                         <div class="col-md-12">
@@ -79,7 +79,7 @@ require('header.php');
                                 </form>
                             </div><!-- /.box-body -->
                             <div class="box-footer">
-                                <code>.box-footer</code>
+                                <code> footer area.......</code>
                             </div><!-- /.box-footer-->
                         </div><!-- /.box -->
                     </div><!-- /.col -->

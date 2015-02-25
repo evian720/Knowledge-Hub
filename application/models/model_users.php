@@ -126,6 +126,27 @@
 			return $this->db->get_where('user', array('email' => $email))->row();
 		}
 
+//=================================================================================================================
+//=================================================================================================================
+//																												  #
+//													Admin Functions   											  #
+//																												  #
+//=================================================================================================================
+//=================================================================================================================	
+
+		public function get_user_list(){
+			return $this->db->get('user')->result();
+		}
+
+		public function edit_user($email, $edit_field, $new_value){
+			$this->db->where('email', $email);
+			$this->db->update('user', array($edit_field=>$new_value));
+		}
+
+		public function get_access_rights(){
+			return $this->db->get('user_access_rights')->result();
+		}
+
 	}
 
 ?>

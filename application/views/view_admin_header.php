@@ -56,7 +56,7 @@
                 </a>
                 <div class="navbar-left">
                     <ul class="nav navbar-nav">
-                        <li class="user user-menu"><a><i class="fa fa-graduation-cap"></i><span>Teacher View</span></a></li>
+                        <li class="user user-menu"><a><i class="fa fa-cogs"></i></i><span>Admin View</span></a></li>
                     </ul>
                 </div>
                 <div class="navbar-right">
@@ -181,13 +181,12 @@
                         </li>
 
                         <li>
-                            <a href="" data-toggle="modal" data-target="#create_new_knowledge" id="new_knowledge"><i class="glyphicon glyphicon-pencil"></i> New Knowledge</a>
+                            <a href="<?php echo base_url() . 'index.php/main/access_rights_management' ?>"><i class="fa fa-users"></i> User Access Rights</a>
                         </li>
 
                         <li>
                             <a href="<?php echo base_url() . 'index.php/main/category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
                         </li>
-
 
                         <li>
                             <a href="javascript:;"><i class="fa fa-bar-chart-o"></i> Statistics</a>
@@ -197,41 +196,13 @@
                 <!-- /.sidebar -->
             </aside>
 
-            <!-- modal for create knowledge -->
-            <div class="modal fade" id="create_new_knowledge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog" style="width: 95%;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div class="modal-body" id="create_knowledge_modal">
-                            <?php
-                                require('modal_create_knowledge.php');
-                            ?>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- just show the welcome once -->
             <input type="hidden" id="just_login" value="<?php echo $this->session->userdata('just_login'); ?>" />
 
         <script>
         $("#for_hidden_top").autoHidingNavbar();
-
-        $(document).ready(function(){
-            $.ajax({
-                url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/get_create_knowledge_detail/", //this is the submit URL
-                type: 'POST', //or POST
-                success: function(data){
-                    $('#create_knowledge_modal').html(data);
-                }
-              });
-        });
-
 
         if($('#just_login').val() == 1 ){
             setTimeout(function(){ 
@@ -246,72 +217,6 @@
                 }
               });
         }
-
-
-
-        //new knowledge script
-          $('#wizard1').bootstrapWizard({
-
-            'tabClass': 'nav nav-pills',
-
-            'nextSelector': '.btn-next',
-
-            'previousSelector': '.btn-previous',
-
-             onInit : function(tab, navigation,index){
-
-             
-
-               //check number of tabs and fill the entire row
-
-               var $total = navigation.find('li').length;
-
-               $width = 100/$total;
-
-               navigation.find('li').css('width',$width + '%');
-
-            },
-
-             onTabClick : function(tab, navigation, index){
-
-                // Disable the posibility to click on tabs
-
-                return false;
-
-            }, 
-
-            onTabShow: function(tab, navigation, index) {
-
-                var $total = navigation.find('li').length;
-
-                var $current = index+1;
-
-                
-
-                var wizard = navigation.closest('.wizard-card');
-
-                
-
-                // If it's the last tab then hide the last button and show the finish instead
-
-                if($current >= $total) {
-
-                    $(wizard).find('.btn-next').hide();
-
-                    $(wizard).find('.btn-finish').show();
-
-                } else {
-
-                    $(wizard).find('.btn-next').show();
-
-                    $(wizard).find('.btn-finish').hide();
-
-                }
-
-            }
-
-            }); 
-
 
         </script>
 

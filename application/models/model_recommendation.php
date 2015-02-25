@@ -36,14 +36,16 @@
 									'knowledge_id' => $knowledge_row->knowledge_id,
 									'knowledge_title' => $knowledge_row->knowledge_title,
 									'user_name' => $user->email,
-									'rating' => $result,
+									'relativity' => $result,
+									'rating' => 0,
+									'rating_times' => 0,
 									'created_time' => date("Y-m-d H:i:s")
 									);
 								$this->db->insert('recommendation', $insert_data);
 							}else{
 								$id = $this->db->get_where('recommendation', array('knowledge_id' => $knowledge_row->knowledge_id,'user_name' => $user->email))->row()->id;
 								$update_data = array(
-									'rating' => $result,
+									'relativity' => $result,
 									'created_time' => date("Y-m-d H:i:s")
 									);
 								$this->db->where('id', $id);
@@ -69,9 +71,9 @@
 				$knowledges_of_a_user = $this->db->get_where('knowledge', array('user_name'=>$user->email))->result();
 				$knowledge_array = array();
 				foreach ($knowledges_of_a_user as $knowledge_of_a_user) {
-					$this_rating = $this->db->get_where('recommendation', array('knowledge_id'=>$knowledge_of_a_user->knowledge_id))->row()->rating;
-					//$this_rating = $this->db->query($rating_query)->row()->rating;
-					$knowledge_array[$knowledge_of_a_user->knowledge_title] = $this_rating;
+					$this_relativity = $this->db->get_where('recommendation', array('knowledge_id'=>$knowledge_of_a_user->knowledge_id))->row()->relativity;
+					//$this_relativity = $this->db->query($relativity_query)->row()->relativity;
+					$knowledge_array[$knowledge_of_a_user->knowledge_title] = $this_relativity;
 				}
 				$dataset[$user->email] = $knowledge_array;
 				
@@ -106,6 +108,35 @@
 			
 			return $this->db->get('knowledge')->result();
 
+		}
+
+		public function submit_rating($knowledge_id, $rating, $user_name){
+			$current_rating = $this->db->get_where('recommendation', array('knowledge_id'=>$knowledge_id))->row()->rating;
+			$current_rating_times = $this->db->get_where('recommendation', array('knowledge_id'=>$knowledge_id))->row()->rating_times;
+			$new_rating = ($current_rating * $current_rating_times + $rating) / ($current_rating_times + 1);
+
+			$update_data = array(
+				'rating' => $new_rating,
+				'rating_times' => $current_rating_times+1
+			);
+			$this->db->where('knowledge_id', $knowledge_id);
+			$this->db->update('recommendation', $update_data);
+
+			//insert into user_rating table
+			$insert_data = array(
+				'id' => '',
+				'user_name' => $user_name,
+				'knowledge_id' => $knowledge_id,
+				'rating' => $rating,
+				'created_time' => date("Y-m-d H:i:s")
+			);
+			$this->db->insert('user_rating', $insert_data);
+		}
+
+		public function get_user_rating($user_name){
+			$this->db->where('user_name', $user_name);
+			$this->db->order_by('created_time', 'desc');
+			return $this->db->get('user_rating')->result();
 		}
 
 
@@ -232,7 +263,7 @@
 				$ranks[$key] = $value / $simSums[$key];
 			}
 
-			//the result $ranks will be a array of recommendation with score(rating * sim)
+			//the result $ranks will be a array of recommendation with score(relativity * sim)
 			array_multisort($ranks, SORT_DESC);    
 			return $ranks;
 

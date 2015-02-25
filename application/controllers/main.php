@@ -29,6 +29,9 @@ class Main extends CI_Controller {
 		elseif ($this->session->userdata('is_logged_in') == 1 && $this->session->userdata('user_role') == 'teacher') {
 			$this->teacher_dashboard();
 		}
+		elseif($this->session->userdata('is_logged_in') == 1 && $this->session->userdata('user_role') == 'admin'){
+			$this->admin_dashboard();
+		}
 		else{
 			$this->load->view('view_new_login_page', $data);
 		}
@@ -62,6 +65,15 @@ class Main extends CI_Controller {
 	public function teacher_dashboard(){
 		if($this->session->userdata('is_logged_in')){
 			$this->load->view('view_teacher_dashboard');
+		}
+		else{
+			$this->load->view('restricted');
+		}
+	}
+
+	public function admin_dashboard(){
+		if($this->session->userdata('is_logged_in')){
+			$this->load->view('view_admin_dashboard');
 		}
 		else{
 			$this->load->view('restricted');
@@ -105,6 +117,8 @@ class Main extends CI_Controller {
 			$this->session->set_userdata($data);
 			if( $this->session->userdata('user_role') == 'teacher' ){
 				$this->teacher_dashboard();
+			}elseif ($this->session->userdata('user_role') == 'admin') {
+				$this->admin_dashboard();
 			}
 			else{
 				$this->dashboard();
@@ -669,6 +683,46 @@ class Main extends CI_Controller {
 	}
 
 
+
+
+//=================================================================================================================
+//=================================================================================================================
+//																												  #
+//													Admin Functions   											  #
+//																												  #
+//=================================================================================================================
+//=================================================================================================================	
+
+	public function access_rights_management(){
+		$this->load->model('model_users');
+		$data['users'] = $this->model_users->get_user_list();
+		$data['user_access_rights'] = $this->model_users->get_access_rights();
+
+		$this->load->view('view_admin_user_access_rights', $data);
+	}
+
+	public function edit_user($edit_field){
+		$email = $this->input->post('pk');
+
+		if($edit_field == "user_role"){
+			if($this->input->post('value') == 1){
+				$new_value = 'student';
+			}elseif($this->input->post('value') == 2){
+				$new_value = 'teacher';
+			}else{
+				$new_value = 'admin';
+			}
+		}else{
+			$new_value = $this->input->post('value');
+		}
+
+		$this->load->model('model_users');
+		$this->model_users->edit_user($email, $edit_field, $new_value);
+	}
+
+
+
+
 //=================================================================================================================
 //=================================================================================================================
 //																												  #
@@ -679,6 +733,13 @@ class Main extends CI_Controller {
 
 	public function recommend(){
 		$this->load->model('model_recommendation');
+
+		//get user_rating
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
 		//$data['recommendations'] is an array with knowledge name as key and score as value
 		$data['recommendations'] = $this->model_recommendation->get_knowledge_recommendation($this->session->userdata('email'));
 		if( count($data['recommendations']) ){
@@ -692,6 +753,13 @@ class Main extends CI_Controller {
 		
 		$this->load->view('view_recommendation', $data);
 
+	}
+
+	public function submit_rating(){
+		$knowledge_id = $this->input->post('knowledge_id');
+		$rating = $this->input->post('rating');
+		$this->load->model('model_recommendation');
+		$this->model_recommendation->submit_rating($knowledge_id, $rating, $this->session->userdata('email'));
 	}
 	
 	

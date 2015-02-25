@@ -10,8 +10,19 @@
         <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         -->
 
+        <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+
+
+        <!-- slider -->
+        <!-- Ion Slider -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/ion.rangeSlider.css'?>' media="screen">
+        <!-- ion slider Nice -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/ion.rangeSlider.skinNice.css'?>' media="screen">
+        <!-- bootstrap slider -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/slider.css'?>' media="screen">
+
         <!-- Theme style -->
-        <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE.css'?>' media="screen">
+        <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE_bk.css'?>' media="screen">
 
 
         <!-- jQuery 2.0.2 -->

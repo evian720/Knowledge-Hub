@@ -128,24 +128,24 @@ require('footer.php');
 
             //column search
             $(document).ready(function() {
-            // Setup - add a text input to each footer cell
-            $('#category_list tfoot th').each( function () {
-                var title = $('#category_list thead th').eq( $(this).index() ).text();
-                $(this).html( '<input type="text" style="width:100px" placeholder="'+title+'" />' );
-            } );
-
-            // DataTable
-            var table = $('#category_list').DataTable();
-
-            // Apply the search
-            table.columns().eq( 0 ).each( function ( colIdx ) {
-                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
-                    table
-                    .column( colIdx )
-                    .search( this.value )
-                    .draw();
+                // Setup - add a text input to each footer cell
+                $('#category_list tfoot th').each( function () {
+                    var title = $('#category_list thead th').eq( $(this).index() ).text();
+                    $(this).html( '<input type="text" style="width:100px" placeholder="'+title+'" />' );
                 } );
-            } );
+
+                // DataTable
+                var table = $('#category_list').DataTable();
+
+                // Apply the search
+                table.columns().eq( 0 ).each( function ( colIdx ) {
+                    $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+                        table
+                        .column( colIdx )
+                        .search( this.value )
+                        .draw();
+                    } );
+                } );
             } );
 
 
