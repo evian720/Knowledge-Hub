@@ -61,7 +61,6 @@
 
 		}
 
-
 		public function create_dataset(){
 
 			$this->update_recommendation_table();
