@@ -273,6 +273,10 @@ class Main extends CI_Controller {
 			$this->dashboard();
 		}
 
+		//add reputation
+		$this->load->model('model_users');
+		$this->model_users->add_reputation($this->session->userdata('email'), 1);
+
 	}
 
 	public function view_knowledge(){
@@ -342,6 +346,10 @@ class Main extends CI_Controller {
 	public function view_knowledge_others(){
 		$this->load->model('model_knowledge_management');
 
+		//update recommendation table
+		$this->load->model('model_recommendation');
+		$this->model_recommendation->update_recommendation_table();
+
 		//pagination
 		$config['base_url'] = base_url() . "index.php/main/view_knowledge_others";
 		$config['per_page'] = 5;
@@ -369,6 +377,14 @@ class Main extends CI_Controller {
 		$data['major'] = $this->model_knowledge_management->get_all_major();
 		$data['subject'] = $this->model_knowledge_management->get_all_subject();
 		$data['chapter'] = $this->model_knowledge_management->get_all_chapter();
+
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
 
 		$this->load->view('view_knowledge_others', $data);
 	}
@@ -398,6 +414,13 @@ class Main extends CI_Controller {
 
 		//get all area
 		$data['area'] = $this->model_knowledge_management->get_all_area();
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
 
 		$data['changing'] = "area";
 		$this->load->view('view_knowledge_others_update', $data);
@@ -430,6 +453,14 @@ class Main extends CI_Controller {
 		$data['major'] = $this->model_knowledge_management->get_all_major();
 
 		$data['changing'] = "major";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -460,6 +491,14 @@ class Main extends CI_Controller {
 		$data['subject'] = $this->model_knowledge_management->get_all_subject();
 
 		$data['changing'] = "subject";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -490,6 +529,14 @@ class Main extends CI_Controller {
 		$data['chapter'] = $this->model_knowledge_management->get_all_subject();
 
 		$data['changing'] = "chapter";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
 		$this->load->view('view_knowledge_others_update', $data);
 	}
 
@@ -505,6 +552,16 @@ class Main extends CI_Controller {
 		$this->load->model('model_knowledge_management');
 		$check_exists = $this->model_knowledge_management->requested_knowledge_exists($knowledge_id, $this->session->userdata('email'));
 		$this->model_knowledge_management->make_knowledge_request($knowledge_id, $this->session->userdata('email'), $check_exists);
+
+		//add reputation
+		$this->load->model('model_users');
+		$knowledge_owner = $this->model_users->get_knowledge_owner($knowledge_id);
+		$knowledge_user_name = $this->model_users->get_knowledge_user_name($knowledge_id);
+		$this->model_users->add_reputation($knowledge_owner, 5);
+		if($knowledge_owner != $knowledge_user_name){
+			$this->model_users->add_reputation($knowledge_user_name, 1);
+		}
+		
 	}
 
 	public function refresh_header_count(){
@@ -628,6 +685,11 @@ class Main extends CI_Controller {
 	public function update_to_do_list_status($to_do_list_id){
 		$this->load->model('model_knowledge_management');
 		$this->model_knowledge_management->update_to_do_list_status($to_do_list_id);
+	}
+
+	public function tmp(){
+		$this->load->model('model_recommendation');
+		$this->model_recommendation->calculate_percentile('evian720@yahoo.com.hk');
 	}
 
 

@@ -465,32 +465,36 @@
 		public function get_others_knowledge_by_area($area, $limit, $start, $user_name){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level1_cat' => $area, 'user_name !=' => $user_name));
+			$this->db->where(array('knowledge.level1_cat' => $area, 'knowledge.user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_major($major, $limit, $start, $user_name){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level2_cat' => $major, 'user_name !=' => $user_name));
+			$this->db->where(array('knowledge.level2_cat' => $major, 'knowledge.user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_subject($subject, $limit, $start, $user_name){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level3_cat' => $subject, 'user_name !=' => $user_name));
+			$this->db->where(array('knowledge.level3_cat' => $subject, 'knowledge.user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 
 		public function get_others_knowledge_by_chapter($chapter, $limit, $start, $user_name){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
-			$this->db->where(array('level4_cat' => $chapter, 'user_name !=' => $user_name));
+			$this->db->where(array('knowledge.level4_cat' => $chapter, 'knowledge.user_name !=' => $user_name));
 			return $this->db->get()->result();
 		}
 		//end of others' knowledge
@@ -804,9 +808,12 @@
 
 
 		public function get_hottest_knowledge_for_recommendation(){
+			$this->db->select("*");
+			$this->db->from("knowledge");
+			$this->db->join("recommendation", "knowledge.knowledge_id = recommendation.knowledge_id");
 			$this->db->limit(5);
 			$this->db->order_by('count', 'desc');
-			$result = $this->db->get('knowledge')->result();
+			$result = $this->db->get()->result();
 			return $result;
 		}
 

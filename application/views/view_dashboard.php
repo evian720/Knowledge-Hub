@@ -15,7 +15,7 @@ require('header.php');
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Blank page
+                        Dashboard
                         <small>Control panel</small>
                     </h1>
                     <ol class="breadcrumb">

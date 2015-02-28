@@ -21,7 +21,6 @@ require('header.php');
 
                 <!-- Main content -->
                 <section class="content">
-
                     <!-- tab for recommendation -->
                     <div class="col-md-12">
                         <div class="nav-tabs-custom">
@@ -46,14 +45,24 @@ require('header.php');
                                             echo '<div class="tab-pane active" id="blind_spot">';
 
                                             foreach ($blind_spot_knowledge as $knowledge) {
+                                                //the color of relativity bar
                                                 if($recommendations[$knowledge->knowledge_title] * 10 >70){
-                                                    $match_color = "success";
+                                                    $match_color_relativity = "success";
                                                 }elseif($recommendations[$knowledge->knowledge_title] * 10 > 30){
-                                                    $match_color = "warning";
+                                                    $match_color_relativity = "warning";
                                                 }else{
-                                                    $match_color = "danger";
+                                                    $match_color_relativity = "danger";
+                                                }
+                                                //the color of rating bar
+                                                if($knowledge->rating > 7 ){
+                                                    $match_color_rating = "success";
+                                                }elseif($knowledge->rating > 4){
+                                                    $match_color_rating = "warning";
+                                                }else{
+                                                    $match_color_rating = "danger";
                                                 }
 
+                                                //"Your rating" message
                                                 if( count($user_ratings)>0 ){
                                                     foreach ($user_ratings as $rating) {
                                                         if( $knowledge->knowledge_id == $rating->knowledge_id){
@@ -118,9 +127,9 @@ require('header.php');
                                                             </div>
 
                                                             <div class="pull-right">
-                                                                Rating: 7.8
+                                                                Rating: ' . $knowledge->rating . '
                                                                 <div class="progress sm progress-striped active" style="width: 100px;">
-                                                                    <div class="progress-bar progress-bar-' . $match_color . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$recommendations[$knowledge->knowledge_title] * 10 . '%">
+                                                                    <div class="progress-bar progress-bar-' . $match_color_rating . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$knowledge->rating * 10 . '%">
                                                                         <span class="sr-only">20% Complete</span>
                                                                     </div>
                                                                 </div>
@@ -129,7 +138,7 @@ require('header.php');
                                                             <div class="pull-right">
                                                                 Relativity: ' . round($recommendations[$knowledge->knowledge_title] * 10) . '% 
                                                                 <div class="progress sm progress-striped active" style="width: 100px;">
-                                                                    <div class="progress-bar progress-bar-' . $match_color . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$recommendations[$knowledge->knowledge_title] * 10 . '%">
+                                                                    <div class="progress-bar progress-bar-' . $match_color_relativity . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$recommendations[$knowledge->knowledge_title] * 10 . '%">
                                                                         <span class="sr-only">20% Complete</span>
                                                                     </div>
                                                                 </div>
@@ -151,12 +160,41 @@ require('header.php');
                                        
                                         foreach ($hottest_knowledge as $knowledge) {
                                             if($knowledge->count > 10){
-                                                $match_color = "success";
+                                                $match_color_relativity = "success";
                                             }elseif($knowledge->count > 3){
-                                                $match_color = "warning";
+                                                $match_color_relativity = "warning";
                                             }else{
-                                                $match_color = "danger";
+                                                $match_color_relativity = "danger";
                                             }
+
+                                            //the color of rating bar
+                                            if($knowledge->rating > 7 ){
+                                                $match_color_rating = "success";
+                                            }elseif($knowledge->rating > 4){
+                                                $match_color_rating = "warning";
+                                            }else{
+                                                $match_color_rating = "danger";
+                                            }
+
+                                            //"Your rating" message
+                                            if( count($user_ratings)>0 ){
+                                                foreach ($user_ratings as $rating) {
+                                                    if( $knowledge->knowledge_id == $rating->knowledge_id){
+                                                        $rating_for_knowledge = $rating->rating;
+                                                        $rating_message = " ";
+                                                        break;
+                                                    }else{
+                                                        $rating_for_knowledge = 0;
+                                                        $rating_message = "You havn't rated it yet! ";
+                                                    }
+                                                }
+                                            }else{
+                                                $rating_for_knowledge = 0;
+                                                $rating_message = "You havn't rated it yet! ";
+                                            }
+
+
+
 
                                             echo '
                                                 <div class="box box-primary">
@@ -194,14 +232,34 @@ require('header.php');
                                                         </div>
 
 
-                                                            <div class="pull-right">
-                                                                Sharing: ' . $knowledge->count . '
-                                                                <div class="progress sm progress-striped active" style="width: 100px;">
-                                                                    <div class="progress-bar progress-bar-' . $match_color . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$knowledge->count * 10 . '%">
-                                                                        <span class="sr-only">20% Complete</span>
-                                                                    </div>
+                                                        <div class="btn btn-flat btn-xs" id="rating_message_'. $knowledge->knowledge_id . '">
+                                                            Your Rating: ' . $rating_message . '
+                                                        </div>
+                                                        <div class="btn btn-flat btn-xs" style="width: 150px;">   
+                                                            <input type="text" value="" id="rating_'. $knowledge->knowledge_id . ' " class="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="'. $rating_for_knowledge .'" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-id="blue">
+                                                        </div>
+                                                        <div class="btn btn-primary btn-flat btn-xs" onclick="submit_rating('. $knowledge->knowledge_id .' )">
+                                                            <i class="fa fa-check"></i>
+                                                        </div>
+
+
+                                                        <div class="pull-right">
+                                                            Rating: ' . $knowledge->rating . '
+                                                            <div class="progress sm progress-striped active" style="width: 100px;">
+                                                                <div class="progress-bar progress-bar-' . $match_color_rating . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$knowledge->rating * 10 . '%">
+                                                                    <span class="sr-only">20% Complete</span>
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <div class="pull-right">
+                                                            Sharing: ' . $knowledge->count . '
+                                                            <div class="progress sm progress-striped active" style="width: 100px;">
+                                                                <div class="progress-bar progress-bar-' . $match_color_relativity . '" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:' .$knowledge->count * 10 . '%">
+                                                                    <span class="sr-only">20% Complete</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
 
                                                     </div><!-- /.box-footer-->
@@ -230,45 +288,36 @@ require('footer.php');
             </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->
 
+    <button type="button hidden" id="confirm_request_knowledge_button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirm_request_knowledge"></button>
+
+        <div class="modal fade" id="confirm_request_knowledge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Attention!</h4>
+              </div>
+              <div class="modal-body">
+                  <p>You already have this knowledge!</p> 
+                  <p>Would you like to add this as a reference?</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" style="color: white">No</button>
+                  <button type="button" id="confirm_combine" data-dismiss="modal" class="btn btn-success" onclick="confirmed_request()">Yes</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+        <input type="hidden" id="requested_knowledge_id"  value="" />
         <input type="hidden" id="slider_value"/>
 
         <!-- Ion Slider -->
         <script src='<?=base_url().'assets/js/ion.rangeSlider.min.js'?>'></script>
         <!-- Bootstrap slider -->
         <script src='<?=base_url().'assets/js/bootstrap-slider.js'?>'></script>
-        <script type="text/javascript">
-            $('.slider').slider({
-                formatter: function(value) {
-                    return  value;
-                }
-            });
-
-            $(".slider").on("slide", function(slideEvt) {
-                $("#slider_value").val(slideEvt.value);
-            });
-
-            function submit_rating(knowledge_id){
-
-                rating_field = "rating_" + knowledge_id;
-                rating = $('#slider_value').val();
-                data = { 'knowledge_id': knowledge_id , 'rating': rating};
-
-                rating_message_field = "rating_message_" + knowledge_id;
-
-                $.ajax({
-                    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/submit_rating/", //this is the submit URL
-                    type: 'POST', //or POST
-                    data:data,
-                    success: function(data){
-                        alertify.success("Rating done!");
-                        $('#slider_value').val();
-                        document.getElementById(rating_message_field).innerHTML = "Your Rating: ";
-                    }
-                });
-                
-            }
-
-        </script>
+        <script src='<?=base_url().'assets/js/bootstrap-confirmation.js'?>'></script>
+        <script src='<?=base_url().'assets/js/my_functions/knowledge_management.js'?>'></script>
 
 
 </body>

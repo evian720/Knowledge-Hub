@@ -58,6 +58,7 @@
 						'first_name' => $row->first_name,
 						'last_name' => $row->last_name,
 						'user_role' => 'student',
+						'reputation' => 0,
 						'major' => $row->major
 					);
 
@@ -124,6 +125,21 @@
 
 		public function get_user_by_email($email){
 			return $this->db->get_where('user', array('email' => $email))->row();
+		}
+
+		public function add_reputation($user_name, $adding_value){
+			$current_reputation = $this->db->get_where('user', array('email'=>$user_name))->row()->reputation;
+			$new_reputation = $current_reputation +  $adding_value;
+			$this->db->where('email', $user_name);
+			$this->db->update('user', array('reputation'=>$new_reputation));
+		}
+
+		public function get_knowledge_owner($knowledge_id){
+			return $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_id))->row()->knowledge_owner;
+		}
+
+		public function get_knowledge_user_name($knowledge_id){
+			return $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_id))->row()->user_name;
 		}
 
 //=================================================================================================================

@@ -22,7 +22,7 @@
         <link rel="stylesheet" href='<?=base_url().'assets/css/slider.css'?>' media="screen">
 
         <!-- Theme style -->
-        <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE_bk.css'?>' media="screen">
+        <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE.css'?>' media="screen">
 
 
         <!-- jQuery 2.0.2 -->

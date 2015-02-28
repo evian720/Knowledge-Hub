@@ -39,6 +39,7 @@
 									'relativity' => $result,
 									'rating' => 0,
 									'rating_times' => 0,
+									'owner_percentile' => $this->calculate_percentile($user->email),
 									'created_time' => date("Y-m-d H:i:s")
 									);
 								$this->db->insert('recommendation', $insert_data);
@@ -46,7 +47,8 @@
 								$id = $this->db->get_where('recommendation', array('knowledge_id' => $knowledge_row->knowledge_id,'user_name' => $user->email))->row()->id;
 								$update_data = array(
 									'relativity' => $result,
-									'created_time' => date("Y-m-d H:i:s")
+									'created_time' => date("Y-m-d H:i:s"),
+									'owner_percentile' => $this->calculate_percentile($user->email)
 									);
 								$this->db->where('id', $id);
 								$this->db->update('recommendation', $update_data);
@@ -99,15 +101,42 @@
 		public function get_knowledge_by_recommendation_array($recommendations){
 			$knowledge_name_array = array();
 			foreach ($recommendations as $key => $value) {
-				array_push($knowledge_name_array, $key);
+				$value1 = "'" . $key . "'";
+				array_push($knowledge_name_array, $value1);
 			}
 
-			$this->db->where_in('knowledge_title', $knowledge_name_array);
-			$this->db->where('reference_knowledge_id', 0);
-			$this->db->order_by('count');
+			// $this->db->select("*");
+			// $this->db->from("knowledge");
+			// $this->db->join("recommendation", "knowledge.knowledge_id = recommendation.knowledge_id");
+			// $this->db->where_in('knowledge.knowledge_title', $knowledge_name_array);
+			// $this->db->where('knowledge.reference_knowledge_id', 0);
+			// $this->db->order_by('knowledge.count');
 			
-			return $this->db->get('knowledge')->result();
+			// return $this->db->get()->result();
 
+			$query = "
+				SELECT k.knowledge_id as 'knowledge_id',
+				k.knowledge_title as 'knowledge_title',
+				k.knowledge_description as 'knowledge_description',
+				k.knowledge_owner as 'knowledge_owner',
+				k.count as 'count',
+				k.level1_cat as 'level1_cat',
+				k.level2_cat as 'level2_cat',
+				k.level3_cat as 'level3_cat',
+				k.level4_cat as 'level4_cat',
+				r1.relativity as 'relativity',
+				r1.rating as 'rating'
+				FROM knowledge k, user u, recommendation r1
+					LEFT JOIN recommendation r2
+					ON r1.knowledge_title = r2.knowledge_title
+					AND (r1.relativity+r1.rating+r1.owner_percentile) < (r2.relativity+r2.rating+r2.owner_percentile)
+				WHERE k.knowledge_owner = u.email
+				AND k.knowledge_id = r1.knowledge_id
+				AND k.reference_knowledge_id = 0
+				AND k.knowledge_title IN ( " . implode(',', $knowledge_name_array) . " )
+				AND r2.knowledge_title IS NULL
+			";
+			return $this->db->query($query)->result();
 		}
 
 		public function submit_rating($knowledge_id, $rating, $user_name){
@@ -137,6 +166,26 @@
 			$this->db->where('user_name', $user_name);
 			$this->db->order_by('created_time', 'desc');
 			return $this->db->get('user_rating')->result();
+		}
+
+		public function calculate_percentile($user_name){
+			//get sorted reputation array
+			$users = $this->db->get_where('user', array('user_role'=>'student'))->result();
+			$user_reputation = array();
+			foreach ($users as $user) {
+				$user_reputation[$user->email] = $user->reputation;
+			}
+			asort($user_reputation);
+
+			$n=0;
+			foreach ($user_reputation as $key => $value) {
+				if ($value <= $user_reputation[$user_name]) {
+					$n = $n + 1;
+				}
+			}
+
+			$percentile = $n / count($user_reputation);
+			return $percentile*10;
 		}
 
 
@@ -264,7 +313,7 @@
 			}
 
 			//the result $ranks will be a array of recommendation with score(relativity * sim)
-			array_multisort($ranks, SORT_DESC);    
+			array_multisort($ranks, SORT_DESC);
 			return $ranks;
 
 		}
