@@ -34,7 +34,7 @@ require('header.php');
                         <div class="small-box bg-aqua">
                             <div class="inner">
                                 <h3>
-                                    150
+                                    <?php echo $user_stat_knowledge; ?>
                                 </h3>
                                 <p>My Knowledge</p>
                             </div>
@@ -50,8 +50,10 @@ require('header.php');
                         <!-- small box -->
                         <div class="small-box bg-green">
                             <div class="inner">
-                                <h3>3</h3>
-                                <p>Focus Area</p>
+                                <h3>
+                                    <?php echo $user_stat_focusing_subject;?>
+                                </h3>
+                                <p>Focus Subject</p>
                             </div>
                             <div class="icon">
                                 <i class="fa fa-cloud"></i>
@@ -65,8 +67,8 @@ require('header.php');
                         <!-- small box -->
                         <div class="small-box bg-yellow">
                             <div class="inner">
-                                <h3>44<sup style="font-size: 20px">Days</sup></h3>
-                                <p>Keep Learning</p>
+                                <h3> <?php echo $user_stat_reputation; ?></h3>
+                                <p>Reputation</p>
                             </div>
                             <div class="icon">
                                 <i class="fa fa-line-chart"></i>
@@ -80,8 +82,8 @@ require('header.php');
                         <!-- small box -->
                         <div class="small-box bg-red">
                             <div class="inner">
-                                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                                <p>Ranking</p>
+                                <h3><?php echo $user_stat_ranking; ?><sup style="font-size: 20px">%</sup></h3>
+                                <p>Ranking Percentile</p>
                             </div>
                             <div class="icon">
                                 <i class="fa fa-trophy"></i>

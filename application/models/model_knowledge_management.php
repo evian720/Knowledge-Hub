@@ -431,6 +431,7 @@
 		public function get_knowledge_by_area($area, $limit, $start){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
 			$this->db->where(array('level1_cat' => $area));
 			return $this->db->get()->result();
@@ -439,6 +440,7 @@
 		public function get_knowledge_by_major($major, $limit, $start){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
 			$this->db->where(array('level2_cat' => $major));
 			return $this->db->get()->result();
@@ -447,6 +449,7 @@
 		public function get_knowledge_by_subject($subject, $limit, $start){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
 			$this->db->where(array('level3_cat' => $subject));
 			return $this->db->get()->result();
@@ -455,6 +458,7 @@
 		public function get_knowledge_by_chapter($chapter, $limit, $start){
 			$this->db->select('*');
 			$this->db->from('knowledge');
+			$this->db->join('recommendation', 'knowledge.knowledge_id = recommendation.knowledge_id');
 			$this->db->limit($limit, $start);
 			$this->db->where(array('knowledge.level4_cat' => $chapter));
 			return $this->db->get()->result();
@@ -518,6 +522,7 @@
 					'read' => 0,
 					'confirmed' => 0,
 					'knowledge_exists' =>$check_exists,
+					'group_id' => 0,
 					'request_time' => date("Y-m-d H:i:s")
 				);
 			$this->db->insert('knowledge_request', $data_knowledge_request);
@@ -525,7 +530,17 @@
 		}
 
 		public function get_notification_count($user_name){
-			return $this->db->get_where('knowledge_request', array('request_receiver' => $user_name, 'read' => 0))->num_rows();
+			$number_rows = $this->db->get_where('knowledge_request', array('request_receiver' => $user_name, 'read' => 0, 'group_id' => 0))->num_rows();
+			$result = $this->db->get_where('knowledge_request', array('request_receiver' => $user_name, 'read' => 0))->result();
+			$group_counter = 0;
+			$current_group_id = 0;
+			foreach ($result as $row) {
+				if($row->group_id != $current_group_id){
+					$current_group_id = $row->group_id;
+					$group_counter++;
+				}
+			}
+			return $number_rows + $group_counter;
 		}
 
 		public function get_notification_details($user_name){
@@ -553,8 +568,14 @@
 		}
 
 		public function accept_knowledge_request($knowledge_request_id){
-			$this->db->where('knowledge_request_id', $knowledge_request_id);
-			$this->db->update('knowledge_request', array('approved' => 1, 'read' => 1));
+			$group_id = $this->db->get_where('knowledge_request', array('knowledge_request_id'=>$knowledge_request_id))->row()->group_id;
+			if($group_id==0){
+				$this->db->where('knowledge_request_id', $knowledge_request_id);
+				$this->db->update('knowledge_request', array('approved' => 1, 'read' => 1));
+			}else{
+				$this->db->where('group_id', $group_id);
+				$this->db->update('knowledge_request', array('approved' => 1, 'read' => 1));
+			}
 		}
 
 		public function get_requested_knowledge($knowledge_request_id){
@@ -947,14 +968,118 @@
 		}
 
 
-
 		public function update_knowledge($knowledge_id, $new_value, $edit_field){
-			
-				$this->db->where('knowledge_id', $knowledge_id);
-				$this->db->update('knowledge', array('knowledge_title' => $new_value));
-			
+			$this->db->where('knowledge_id', $knowledge_id);
+			$this->db->update('knowledge', array('knowledge_title' => $new_value));
+		}
+
+
+		public function get_teacher_access_major($username){
+			return $this->db->get_where('user_access_rights', array('email'=>$username))->result();
+		}
+
+		public function get_teacher_access_subject($username){
+			$majors = $this->db->get_where('user_access_rights', array('email'=>$username))->result();
+			$majors_array = array();
+			foreach ($majors as $row) {
+				$value1 = "'" . $row->major . "'";
+				array_push($majors_array, $value1);
+			}
+
+			$query = "
+				SELECT cat1.cat_id,
+				cat1.cat_name,
+				cat2.cat_name as 'parent_name'
+				FROM category cat1
+				LEFT JOIN category cat2
+					ON cat1.parent_id=cat2.cat_id
+				WHERE cat2.cat_name IN ( " . implode(',', $majors_array) . " )
+			";
+
+			return $this->db->query($query)->result();
+		}
+
+		public function get_teacher_access_chapter($username){
+			$teacher_subject_access = $this->get_teacher_access_subject($username);
+			$subject_array = array();
+			foreach ($teacher_subject_access as $key => $value) {
+				$value1 = "'" . $value->cat_name . "'";
+				array_push($subject_array, $value1);
+			}
+
+			$query = "
+				SELECT cat1.cat_id,
+				cat1.cat_name,
+				cat2.cat_name as 'parent_name'
+				FROM category cat1
+				LEFT JOIN category cat2
+					ON cat1.parent_id=cat2.cat_id
+				WHERE cat2.cat_name IN ( " . implode(',', $subject_array) . " )
+			";
+			return $this->db->query($query)->result();
+		}
+
+		public function submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_major, $recommendation_target_subject){
+			//get the recommendation target user list
+				//modify the format of recommendation target list
+			if( !empty($recommendation_target_major)){
+				$recommendation_target_majorsubject_array = array();
+				foreach ($recommendation_target_major as $value) {
+					$value1 = "'".$value."'";
+					array_push($recommendation_target_majorsubject_array, $value1);
+				}
+			}
+
+			if( !empty($recommendation_target_subject)){
+				foreach ($recommendation_target_subject as $value) {
+					$value1 = "'".$value."'";
+					array_push($recommendation_target_majorsubject_array, $value1);
+				}
+			}//end of modify format
+
+			$query_user_list = "
+				SELECT DISTINCT cat_owner
+				FROM user_category
+				WHERE cat_name IN ( " . implode(',', $recommendation_target_majorsubject_array) . " )
+			";
+
+			$user_list = $this->db->query($query_user_list)->result();
+
+			//define knowledge request group id
+			if(sizeof($user_list) > 1){
+				$this->db->select_max('group_id');
+				$group_id = $this->db->get('knowledge_request')->row()->group_id + 1;
+			}else{
+				$group_id = 0;	
+			}
+
+			foreach ($user_list as $key => $user) {
+				if($user->cat_owner != $this->get_knowledge_owner($recommended_knowledge_id)){
+					$recommendation_request = array(
+						'knowledge_request_id' => "",
+						'request_sender' => $user->cat_owner,
+						'request_receiver' => $this->get_knowledge_owner($recommended_knowledge_id),
+						'knowledge_id' => $recommended_knowledge_id,
+						'approved' => 0,
+						'read' => 0,
+						'confirmed' => 0,
+						'knowledge_exists' =>0,
+						'group_id' => $group_id,
+						'request_time' => date("Y-m-d H:i:s")
+					);
+					$this->db->insert('knowledge_request', $recommendation_request);
+				}
+			}
+
+
+
+
+			print_r($user_list);
+			echo $recommended_knowledge_id;
+			//print_r(implode(',', $recommendation_target_majorsubject_array));
 
 		}
+
 
 
 	}//end of the class

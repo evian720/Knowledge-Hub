@@ -54,6 +54,13 @@ class Main extends CI_Controller {
 		$this->load->model('model_knowledge_management');
 		$data['to_do_list'] = $this->model_knowledge_management->get_to_do_list($this->session->userdata('email'));
 
+		$this->load->model('model_users');
+		$data['user_stat_knowledge'] = $this->model_users->get_user_stat_knowledge($this->session->userdata('email'));
+		$data['user_stat_focusing_subject'] = $this->model_users->get_user_stat_focusing_subject($this->session->userdata('email'));
+		$data['user_stat_reputation'] = $this->model_users->get_user_stat_reputation($this->session->userdata('email'));
+		$this->load->model('model_recommendation');
+		$data['user_stat_ranking'] = $this->model_recommendation->calculate_percentile($this->session->userdata('email'))*10;
+
 		if($this->session->userdata('is_logged_in')){
 			$this->load->view('view_dashboard', $data);
 		}
@@ -742,6 +749,162 @@ class Main extends CI_Controller {
 		$this->model_knowledge_management->delete_category($cat_id);
 
 		$this->category_management();
+	}
+
+	public function teacher_knowledge_recommendation(){
+
+		$this->load->model('model_knowledge_management');
+
+		//update recommendation table
+		$this->load->model('model_recommendation');
+		$this->model_recommendation->update_recommendation_table();
+
+		//pagination
+		$config['base_url'] = base_url() . "index.php/main/teacher_knowledge_recommendation";
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+
+		//get all area
+		$data['major'] =$this->model_knowledge_management->get_teacher_access_major($this->session->userdata('email'));
+		$data['subject'] = $this->model_knowledge_management->get_teacher_access_subject($this->session->userdata('email'));
+		$data['chapter'] = $this->model_knowledge_management->get_teacher_access_chapter($this->session->userdata('email'));
+
+		// create link for major
+		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_major($data['major'][0]->major);
+		$this->pagination->initialize($config);
+		$data['major_knowledge'] = $this->model_knowledge_management->get_knowledge_by_major($data['major'][0]->major, $config['per_page'], $page);
+		$data['link2'] = $this->pagination->create_links();
+
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
+
+		$this->load->view('view_teacher_recommend_knowledge', $data);
+	}
+
+	public function update_major_selection_teacher_recommendation(){
+		$option_selected = $this->input->post('optradio');
+		$data['selected'] = $option_selected;
+
+		$this->load->model('model_knowledge_management');
+
+		//pagination
+		$config['base_url'] = base_url() . "index.php/main/teacher_knowledge_recommendation";
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_major($option_selected);
+
+		// create link for major
+		$this->pagination->initialize($config);
+		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_major($option_selected, $config['per_page'], $page);
+		$data['link1'] = $this->pagination->create_links();
+
+
+		//get all area
+		$data['major'] = $this->model_knowledge_management->get_teacher_access_major($this->session->userdata('email'));
+
+		$data['changing'] = "major";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
+		$this->load->view('view_teacher_recommend_knowledge_update', $data);
+	}
+
+	public function update_subject_selection_teacher_recommendation(){
+		$option_selected = $this->input->post('optradio');
+		$data['selected'] = $option_selected;
+
+		$this->load->model('model_knowledge_management');
+
+		//pagination
+		$config['base_url'] = base_url() . "index.php/main/teacher_knowledge_recommendation";
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_subject($option_selected);
+
+		// create link for major
+		$this->pagination->initialize($config);
+		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_subject($option_selected, $config['per_page'], $page);
+		$data['link1'] = $this->pagination->create_links();
+
+
+		//get all area
+		$data['subject'] = $this->model_knowledge_management->get_teacher_access_subject($this->session->userdata('email'));
+
+		$data['changing'] = "subject";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
+		$this->load->view('view_teacher_recommend_knowledge_update', $data);
+	}
+
+	public function update_chapter_selection_teacher_recommendation(){
+		$option_selected = $this->input->post('optradio');
+		$data['selected'] = $option_selected;
+
+		$this->load->model('model_knowledge_management');
+
+		//pagination
+		$config['base_url'] = base_url() . "index.php/main/teacher_knowledge_recommendation";
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$config['total_rows'] = $this->model_knowledge_management->count_knowledge_by_chapter($option_selected);
+
+		// create link for major
+		$this->pagination->initialize($config);
+		$data['knowledges'] = $this->model_knowledge_management->get_knowledge_by_chapter($option_selected, $config['per_page'], $page);
+		$data['link1'] = $this->pagination->create_links();
+
+
+		//get all area
+		$data['chapter'] = $this->model_knowledge_management->get_teacher_access_chapter($this->session->userdata('email'));
+
+		$data['changing'] = "chapter";
+
+		//get user_rating
+		$this->load->model('model_recommendation');
+		$data['user_ratings'] = $this->model_recommendation->get_user_rating($this->session->userdata('email'));
+		if( count($data['user_ratings'])==0 ){
+			$data['user_ratings'] = array();
+		}
+
+		$this->load->view('view_teacher_recommend_knowledge_update', $data);
+	}
+
+
+
+	public function submit_teacher_recommendation(){
+		$recommendation_target_major = $this->input->post('recommendation_target_major');
+		$recommendation_target_subject = $this->input->post('recommendation_target_subject');
+		$recommended_knowledge_id = $this->input->post('recommend_knowledge_id');
+
+		$this->load->model('model_knowledge_management');
+		$this->model_knowledge_management->submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_major, $recommendation_target_subject);
+
+
 	}
 
 

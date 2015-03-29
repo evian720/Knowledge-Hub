@@ -12,6 +12,18 @@
         <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE.css'?>' media="screen">
 
 
+        <!-- slider -->
+        <!-- Ion Slider -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/ion.rangeSlider.css'?>' media="screen">
+        <!-- ion slider Nice -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/ion.rangeSlider.skinNice.css'?>' media="screen">
+        <!-- bootstrap slider -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/slider.css'?>' media="screen">
+
+        <!-- Theme style -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/AdminLTE.css'?>' media="screen">
+
+
         <!-- jQuery 2.0.2 -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <!-- Bootstrap -->
@@ -36,6 +48,8 @@
         <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.min.css'?>' media="screen">
         <script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
 
+        <!-- typeahead -->
+        <script src='<?=base_url().'assets/js/typeahead.js'?>'></script>
 
     </head>
     <body class="skin-blue fixed">
@@ -188,6 +202,9 @@
                             <a href="<?php echo base_url() . 'index.php/main/category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
                         </li>
 
+                        <li>
+                            <a href="<?php echo base_url() . 'index.php/main/teacher_knowledge_recommendation' ?>"><i class="fa fa-search"></i> Recommend Knowledge</a>
+                        </li>
 
                         <li>
                             <a href="javascript:;"><i class="fa fa-bar-chart-o"></i> Statistics</a>

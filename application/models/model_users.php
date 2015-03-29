@@ -142,6 +142,23 @@
 			return $this->db->get_where('knowledge', array('knowledge_id' => $knowledge_id))->row()->user_name;
 		}
 
+		public function get_user_stat_knowledge($username){
+			$this->db->where('user_name', $username);
+			$this->db->from('knowledge');
+			return $this->db->count_all_results();
+		}
+
+		public function get_user_stat_focusing_subject($username){
+			$this->db->where(array('level'=>3, 'cat_owner'=>$username));
+			$this->db->from('user_category');
+			return $this->db->count_all_results();
+		}
+
+		public function get_user_stat_reputation($username){
+			return $this->db->get_where('user', array('email'=>$username))->row()->reputation;
+		}
+
+
 //=================================================================================================================
 //=================================================================================================================
 //																												  #

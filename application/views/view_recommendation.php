@@ -153,10 +153,13 @@ require('header.php');
                                         }//end of if
                                     ?>
                                 
-
-                                <div class="tab-pane" id="hottest_knowledge_tab">
-
-                                    <?php
+                                <?php
+                                        if( count($blind_spot_knowledge) > 0 ){
+                                            echo '<div class="tab-pane" id="hottest_knowledge_tab">';
+                                        }
+                                        else{
+                                            echo '<div class="tab-pane active" id="hottest_knowledge_tab">';
+                                        }
                                        
                                         foreach ($hottest_knowledge as $knowledge) {
                                             if($knowledge->count > 10){

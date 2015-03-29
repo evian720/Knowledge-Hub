@@ -79,7 +79,7 @@ require('header.php');
                                 </form>
                             </div><!-- /.box-body -->
                             <div class="box-footer">
-                                <code> footer area.......</code>
+                                <code> </code>
                             </div><!-- /.box-footer-->
                         </div><!-- /.box -->
                     </div><!-- /.col -->
