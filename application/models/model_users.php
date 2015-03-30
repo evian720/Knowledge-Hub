@@ -108,7 +108,12 @@
 			$this->db->where('email', $email);
 			$query = $this->db->get('user')->row();
 			return $query->first_name;
+		}
 
+		public function getLastname($email){
+			$this->db->where('email', $email);
+			$query = $this->db->get('user')->row();
+			return $query->last_name;
 		}
 
 		public function get_user_major($email){
@@ -156,6 +161,54 @@
 
 		public function get_user_stat_reputation($username){
 			return $this->db->get_where('user', array('email'=>$username))->row()->reputation;
+		}
+
+		public function edit_firstname($username, $new_first_name){
+			$this->db->where('email', $username);
+			$this->db->update('user', array('first_name'=>$new_first_name));
+		}
+
+		public function edit_lastname($username, $new_last_name){
+			$this->db->where('email', $username);
+			$this->db->update('user', array('last_name'=>$new_last_name));
+		}
+
+		public function edit_major($username, $new_major){
+			$this->db->where('email', $username);
+			$this->db->update('user', array('major'=>$new_major));
+		}
+
+		public function update_available_majors_json(){
+			$this->db->select("cat_name");
+			$result = $this->db->get_where('category', array('level'=>2))->result();
+			$result_array = array();
+
+			foreach ($result as $row) {
+				array_push($result_array, $row->cat_name);
+			}
+
+			$str = json_encode($result_array);
+			
+			$file = "json/available_majors.json";
+		    file_put_contents($file, $str);
+		}
+
+		public function verify_password($username, $password){
+			$this->db->where('email', $username);
+			$this->db->where('password', md5($password));
+			$query = $this->db->get('user');
+
+			if($query->num_rows() == 1){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+
+		public function update_user_password($username, $new_password){
+			$this->db->where('email', $username);
+			$this->db->update('user', array('password' => md5($new_password)));
 		}
 
 

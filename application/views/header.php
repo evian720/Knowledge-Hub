@@ -129,7 +129,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        <a class="btn btn-default btn-flat" data-toggle="modal" data-target="#user_profile_modal">Profile</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="<?php echo base_url() . 'index.php/main/logout' ?>" class="btn btn-default btn-flat">Sign out</a>
@@ -212,9 +212,6 @@
                             <a href="<?php echo base_url() . 'index.php/main/recommend' ?>"><i class="fa fa-thumbs-o-up"></i> Recommendation</a>
                         </li>
 
-                        <li>
-                            <a href="javascript:;"><i class="fa fa-bar-chart-o"></i> Statistics</a>
-                        </li>
                     </ul>
                 </section>
                 <!-- /.sidebar -->
@@ -260,6 +257,72 @@
 
             <!-- just show the welcome once -->
             <input type="hidden" id="just_login" value="<?php echo $this->session->userdata('just_login'); ?>" />
+
+
+            <!-- modal for user profile -->
+            <div class="modal fade" id="user_profile_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>User Profile<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></h3>
+                        </div>
+                        <div class="modal-body" id="">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-xs-6">
+                                    <div class="input-group">
+                                        <b>User Name</b><br>
+                                        <?php echo $this->session->userdata('email');?>
+                                    </div>
+                                    <hr>
+                                    <div class="input-group">
+                                        <b>First Name</b><br>
+                                        <a href="#" class="edit_firstname" data-type="text" data-pk="<?php echo $this->session->userdata('email');?>" ><?php echo $this->session->userdata('firstname');?></a>
+                                    </div>
+                                    <hr>
+                                    <div class="input-group">
+                                        <b>Last Name</b><br>
+                                        <a href="#" class="edit_lastname" data-type="text" data-pk="<?php echo $this->session->userdata('email');?>" ><?php echo $this->session->userdata('lastname');?></a>
+                                    </div>
+                                    <hr>
+                                    <div class="input-group">
+                                        <b>Major</b><br>
+                                        <a href="#" class="edit_major" data-type="select" data-pk="<?php echo $this->session->userdata('email');?>" ><?php echo $this->session->userdata('major');?></a>
+                                    </div>
+                                </div>  
+
+                                <div class="col-md-6 col-lg-6 col-xs-6">
+                                    <form id="new_password_form">
+                                        <div>
+                                            <b>Original Password</b><br>
+                                            <input type="password" class="form-control" id="orignal_password" name="orignal_password" placeholder="Password">
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <b>New Password</b><br>
+                                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder="New Password" required>
+                                        </div>
+
+                                        <br><b>New Password Again</b><br>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="new_password_again" name="new_password_again" placeholder="Input again" required>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-danger btn-flat" id="submit_new_password_button" type="button" disabled="">Go!</button>
+                                            </span>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         <script>
@@ -387,6 +450,84 @@
         });
     }
 
+                //editabke
+            $.fn.editable.defaults.mode = 'inline';
+            $(document).ready(function() {
+                $('.edit_firstname').editable({
+                    url: 'http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/edit_firstname/',
+                    success: function(response, newValue) {
+                    }
+                });
+
+            });
+
+            $(document).ready(function() {
+                $('.edit_lastname').editable({
+                    url: 'http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/edit_lastname/',
+                    success: function(response, newValue) {
+                    }
+                });
+
+            });
+
+
+            //update edit category list
+            $(document).ready(function() {
+                $.ajax({
+                    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/update_available_majors/", //this is the submit URL
+                    type: 'POST', //or POST
+                    success: function(){
+                        $.get('http://101.78.175.101:8580/fyp/knowledge_hub/json/available_majors.json', function(data){
+                            $('.edit_major').editable({
+                                source: data,
+                                url: 'http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/edit_major/',
+                                success: function(response, newValue) {
+
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+
+            //update user password
+            var old_pw_valid;
+            $( "#new_password_again" ).keyup(function( event ) {
+                var new_password = $('#new_password').val();
+                var new_password_again = $('#new_password_again').val();
+
+                
+                $.ajax({
+                    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/verify_password/", //this is the submit URL
+                    type: 'POST', //or POST
+                    data: $('#orignal_password').serialize(),
+                    success: function(data){
+                        old_pw_valid = data;
+                    }
+                });
+
+                if(new_password == new_password_again && old_pw_valid == 1){
+                    document.getElementById("submit_new_password_button").removeAttribute("disabled");
+                    document.getElementById("submit_new_password_button").setAttribute("class", "btn btn-success btn-flat");
+                }else{
+                    document.getElementById("submit_new_password_button").setAttribute("disabled", "");
+                    document.getElementById("submit_new_password_button").setAttribute("class", "btn btn-danger btn-flat");
+                }
+            });
+
+
+
+
+               $('#submit_new_password_button').on('click', function(e){
+                  $.ajax({
+                        url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/update_user_password/", //this is the submit URL
+                        type: 'POST', //or POST
+                        data: $('#new_password_again').serialize(),
+                        success: function(data){
+                            alertify.success("Password Changed!");
+                        }
+                    });
+                });
 
 
         </script>

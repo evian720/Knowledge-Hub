@@ -118,7 +118,8 @@ class Main extends CI_Controller {
 					'firstname' => $this->model_users->getFirstname($this->input->post('email')),
 					'major' => $this->model_users->get_user_major($this->input->post('email')),
 					'user_role' => $this->model_users->get_user_role($this->input->post('email')),
-					'just_login' => 1
+					'just_login' => 1,
+					'lastname' => $this->model_users->getLastname($this->input->post('email'))
 				);
 			
 			$this->session->set_userdata($data);
@@ -231,6 +232,49 @@ class Main extends CI_Controller {
 
 	public function update_just_login(){
 		$this->session->set_userdata(array('just_login' => 0));
+	}
+
+	public function edit_firstname(){
+		$username = $this->input->post('pk');
+		$new_value = $this->input->post('value');
+		$this->load->model('model_users');
+		$this->model_users->edit_firstname($username, $new_value);
+	}
+
+	public function edit_lastname(){
+		$username = $this->input->post('pk');
+		$new_value = $this->input->post('value');
+		$this->load->model('model_users');
+		$this->model_users->edit_lastname($username, $new_value);
+	}
+
+	public function edit_major(){
+		$username = $this->input->post('pk');
+		$new_value = $this->input->post('value');
+		$this->load->model('model_users');
+		$this->model_users->edit_major($username, $new_value);
+	}
+
+	public function update_available_majors(){
+		$this->load->model('model_users');
+		$result = $this->model_users->update_available_majors_json();
+		//$str = json_encode($result);
+		echo $result;
+	}
+
+	public function verify_password(){
+		$old_password = $this->input->post('orignal_password');
+
+		$this->load->model('model_users');
+		$valid = $this->model_users->verify_password($this->session->userdata('email'), $old_password);
+		echo $valid;
+	}
+
+	public function update_user_password(){
+		$new_password = $this->input->post('new_password_again');
+		$this->load->model('model_users');
+		$this->model_users->update_user_password($this->session->userdata('email'), $new_password);
+
 	}
 
 
