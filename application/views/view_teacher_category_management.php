@@ -48,21 +48,40 @@ require('view_teacher_header.php');
                                     <tbody>
                                         <?php
                                         foreach ($categories as $row) {
-                                            echo '
-                                            <tr>
-                                                <td><a href="#" class="edit parent_level" data-type="text" data-pk="' . $row->level1_cat_id . '" >' . $row->level1_cat . '</a></td>
-                                                <td><a href="#" class="edit parent_level" data-type="text" data-pk="' . $row->level2_cat_id . '" >' . $row->level2_cat . '</a></td>
-                                                <td><a href="#" class="edit parent_level" data-type="text" data-pk="' . $row->level3_cat_id . '" >' . $row->level3_cat . '</a></td>
-                                                <td><a href="#" class="edit" data-type="text" data-pk="' . $row->level4_cat_id . '" >' . $row->level4_cat . '</a></td>
-                                                <td class="action-col">
-                                                    <span class="btn-group">
-                                                        <a href="delete_cat?cat_id=' . $row->level4_cat_id . "\"" . ' class="btn btn-small delete_cat" id="delete_cat_button" data-toggle="confirmation" data-placement="left" data-btn-ok-label="Yes!" data-btn-ok-icon="glyphicon glyphicon-share-alt" data-btn-ok-class="btn-success" data-btn-cancel-label="Stop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle" data-btn-cancel-class="btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
-                                                        <a href="#" class="btn btn-small"><i class="fa fa-paint-brush"></i></a>
-                                                        <a href="#" class="btn btn-small"><i class="fa fa-plus"></i></a>
-                                                    </span>
-                                                </td>
-                                            </tr>
+                                            if(in_array($row->level2_cat, $user_access_rights_array)){
+                                                echo '
+                                                    <tr>
+                                                        <td>' . $row->level1_cat . '</td>
+                                                        <td><a href="#" class="edit parent_level" data-type="text" data-pk="' . $row->level2_cat_id . '" >' . $row->level2_cat . '</a></td>
+                                                        <td><a href="#" class="edit parent_level" data-type="text" data-pk="' . $row->level3_cat_id . '" >' . $row->level3_cat . '</a></td>
+                                                        <td><a href="#" class="edit" data-type="text" data-pk="' . $row->level4_cat_id . '" >' . $row->level4_cat . '</a></td>
+                                                        <td class="action-col">
+                                                            <span class="btn-group">
+                                                                <a href="delete_cat?cat_id=' . $row->level4_cat_id . "\"" . ' class="btn btn-small delete_cat" id="delete_cat_button" data-toggle="confirmation" data-placement="left" data-btn-ok-label="Yes!" data-btn-ok-icon="glyphicon glyphicon-share-alt" data-btn-ok-class="btn-success" data-btn-cancel-label="Stop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle" data-btn-cancel-class="btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                                                                <a href="#" class="btn btn-small"><i class="fa fa-paint-brush"></i></a>
+                                                                <a href="#" class="btn btn-small"><i class="fa fa-plus"></i></a>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ';
+                                            }else{
+                                                echo '
+                                                    <tr>
+                                                        <td>' . $row->level1_cat . '</td>
+                                                        <td>' . $row->level2_cat . '</td>
+                                                        <td>' . $row->level3_cat . '</td>
+                                                        <td>' . $row->level4_cat . '</td>
+                                                        <td class="action-col">
+                                                            <span class="btn-group">
+                                                                <a href="delete_cat?cat_id=' . $row->level4_cat_id . "\"" . ' class="btn btn-small delete_cat" id="delete_cat_button" data-toggle="confirmation" data-placement="left" data-btn-ok-label="Yes!" data-btn-ok-icon="glyphicon glyphicon-share-alt" data-btn-ok-class="btn-success" data-btn-cancel-label="Stop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle" data-btn-cancel-class="btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                                                                <a href="#" class="btn btn-small"><i class="fa fa-paint-brush"></i></a>
+                                                                <a href="#" class="btn btn-small"><i class="fa fa-plus"></i></a>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
                                             ';
+                                            }
+                                            
                                         }
 
                                         ?>

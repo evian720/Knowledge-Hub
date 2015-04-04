@@ -220,6 +220,17 @@
 			return substr($this->db->get_where('user', array('email'=>$username))->row()->register_date, 0, 10);
 		}
 
+		public function get_access_rights_by_user_name_as_array($email){
+			$user_access_rights = $this->db->get_where('user_access_rights', array('email'=>$email))->result();
+
+			$user_access_rights_array = array();
+			foreach ($user_access_rights as $key => $value) {
+				array_push($user_access_rights_array, $value->major);
+			}
+
+			return $user_access_rights_array;
+		}
+
 
 //=================================================================================================================
 //=================================================================================================================

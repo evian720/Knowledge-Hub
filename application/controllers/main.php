@@ -763,6 +763,9 @@ class Main extends CI_Controller {
 		$this->load->model('model_knowledge_management');
 		$data['categories'] = $this->model_knowledge_management->get_category_list();
 
+		$this->load->model('model_users');
+		$data['user_access_rights_array'] = $this->model_users->get_access_rights_by_user_name_as_array($this->session->userdata('email'));
+
 		$this->load->view('view_teacher_category_management', $data);
 	}
 
