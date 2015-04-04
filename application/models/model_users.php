@@ -59,7 +59,8 @@
 						'last_name' => $row->last_name,
 						'user_role' => 'student',
 						'reputation' => 0,
-						'major' => $row->major
+						'major' => $row->major,
+						'register_date' => date("Y-m-d H:i:s")
 					);
 
 				$query = $this->db->insert('user', $data);
@@ -130,6 +131,10 @@
 
 		public function get_user_by_email($email){
 			return $this->db->get_where('user', array('email' => $email))->row();
+		}
+
+		public function get_user_email_by_user_id($user_id){
+			return $this->db->get_where('user', array('user_id'=>$user_id))->row()->email;
 		}
 
 		public function add_reputation($user_name, $adding_value){
@@ -211,6 +216,10 @@
 			$this->db->update('user', array('password' => md5($new_password)));
 		}
 
+		public function get_register_date($username){
+			return substr($this->db->get_where('user', array('email'=>$username))->row()->register_date, 0, 10);
+		}
+
 
 //=================================================================================================================
 //=================================================================================================================
@@ -231,6 +240,29 @@
 
 		public function get_access_rights(){
 			return $this->db->get('user_access_rights')->result();
+		}
+
+		public function get_access_rights_by_user_id($user_id){
+			$this->db->select("user_access_rights.major");
+			$this->db->from('user_access_rights');
+			$this->db->join('user', 'user_access_rights.email = user.email');
+			$this->db->where('user.user_id', $user_id);
+			return $this->db->get()->result();
+		}
+
+		public function submit_user_access_rights($email, $new_access_rights){
+			$this->db->where('email', $email);
+			$this->db->delete('user_access_rights');
+
+			foreach ($new_access_rights as $key => $value) {
+				$row = array(
+						'right_id' => '',
+						'email' => $email,
+						'major' => $value,
+						'created_time' => date("Y-m-d H:i:s")
+					);
+				$this->db->insert('user_access_rights', $row);
+			}
 		}
 
 	}

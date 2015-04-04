@@ -119,7 +119,8 @@ class Main extends CI_Controller {
 					'major' => $this->model_users->get_user_major($this->input->post('email')),
 					'user_role' => $this->model_users->get_user_role($this->input->post('email')),
 					'just_login' => 1,
-					'lastname' => $this->model_users->getLastname($this->input->post('email'))
+					'lastname' => $this->model_users->getLastname($this->input->post('email')),
+					'register_date' => $this->model_users->get_register_date($this->input->post('email'))
 				);
 			
 			$this->session->set_userdata($data);
@@ -215,7 +216,9 @@ class Main extends CI_Controller {
 				$data = array(
 						'email' => $newemail,
 						'is_logged_in' => 1,
-						'firstname' => $this->model_users->getFirstname($this->input->post('email'))
+						'firstname' => $this->model_users->getFirstname($this->input->post('email')),
+						'lastname' => $this->model_users->getLastname($this->input->post('email')),
+						'register_date' => $this->model_users->get_register_date($this->session->userdata('email'))
 					);
 
 				$this->session->set_userdata($data);
@@ -987,6 +990,32 @@ class Main extends CI_Controller {
 
 		$this->load->model('model_users');
 		$this->model_users->edit_user($email, $edit_field, $new_value);
+	}
+
+	public function admin_category_management(){
+		$this->load->model('model_knowledge_management');
+		$data['categories'] = $this->model_knowledge_management->get_category_list();
+
+		$this->load->view('view_admin_category_management', $data);
+	}
+
+	public function update_user_access_rights_selection($user_id){
+		$this->load->model('model_users');
+		$data['user_access_rights'] = $this->model_users->get_access_rights_by_user_id($user_id);
+		$data['email'] = $this->model_users->get_user_email_by_user_id($user_id);
+
+		$this->load->model('model_knowledge_management');
+		$data['all_major'] = $this->model_knowledge_management->get_all_major();
+
+		$this->load->view('view_admin_user_access_rights_update', $data);		
+	}
+
+	public function submit_user_access_rights(){
+		$new_access_rights = $this->input->post('access_rights');
+		$email = $this->input->post('user_name');
+
+		$this->load->model('model_users');
+		$this->model_users->submit_user_access_rights($email, $new_access_rights);
 	}
 
 

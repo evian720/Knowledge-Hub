@@ -131,8 +131,8 @@
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue" style="height: 100px;">
                                     <p>
-                                        <?php echo $this->session->userdata('firstname')?> - Teacher
-                                        <small>Start Knowledge Hub @ </small>
+                                        <?php echo $this->session->userdata('firstname')?> - Admin
+                                        <small>Start Knowledge Hub @ <?php echo $this->session->userdata('register_date'); ?></small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -185,7 +185,7 @@
                         </li>
 
                         <li>
-                            <a href="<?php echo base_url() . 'index.php/main/category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
+                            <a href="<?php echo base_url() . 'index.php/main/admin_category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
                         </li>
 
                         <li>
