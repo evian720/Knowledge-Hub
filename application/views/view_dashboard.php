@@ -98,82 +98,38 @@ require('header.php');
 
 
                     <div class="col-md-6">
-                        <!-- LINE CHART -->
-                        <div class="box box-info">
-                            <div class="box-header">
-                                <h3 class="box-title">New Knowledge Stat</h3>
-                            </div>
-                            <div class="box-body chart-responsive">
-                                <div class="chart" id="line-chart" style="height: 300px;"></div>
-                            </div><!-- /.box-body -->
-                        </div><!-- /.box -->
 
-                        <!-- start of calenda -->
-                        <div class="box box-solid bg-green-gradient collapsed-box">
-                            <div class="box-header">
-                                <i class="fa fa-calendar"></i>
-                                <h3 class="box-title">Calendar</h3>
-                                <!-- tools box -->
-                                <div class="pull-right box-tools">
-                                    <!-- button with a dropdown -->
-                                    <div class="btn-group">
-                                        <button class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i></button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Add new event</a></li>
-                                            <li><a href="#">Clear events</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">View calendar</a></li>
-                                        </ul>
-                                    </div>
-                                    <button class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                                    <button class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i></button>
-                                </div><!-- /. tools -->
-                            </div><!-- /.box-header -->
-                            <div class="box-body no-padding" style="display: none;">
-                                <!--The calendar -->
-                                <div id="calendar" style="width: 100%"></div>
-                            </div><!-- /.box-body -->
-                            <div class="box-footer text-black" style="display: none;">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <!-- Progress bars -->
-                                        <div class="clearfix">
-                                            <span class="pull-left">Task #1</span>
-                                            <small class="pull-right">90%</small>
-                                        </div>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-green" style="width: 90%;"></div>
-                                        </div>
 
-                                        <div class="clearfix">
-                                            <span class="pull-left">Task #2</span>
-                                            <small class="pull-right">70%</small>
+                        <div class="box box-solid bg-green-gradient">
+                                <div class="box-header">
+                                    <i class="fa fa-calendar"></i>
+                                    <h3 class="box-title">Calendar</h3>
+                                    <!-- tools box -->
+                                    <div class="pull-right box-tools">
+                                        <!-- button with a dropdown -->
+                                        <div class="btn-group">
+                                            <button class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i></button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a href="<?php echo base_url() . 'index.php/main/view_knowledge' ?>">Time Line</a></li>
+                                                <li><a href="<?php echo base_url() . 'index.php/main/view_tree' ?>">Knowledge Tree</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="<?php echo base_url() . 'index.php/main/view_knowledge_others' ?>">Check Peers'</a></li>
+                                            </ul>
                                         </div>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-green" style="width: 70%;"></div>
-                                        </div>
-                                    </div><!-- /.col -->
-                                    <div class="col-sm-6">
-                                        <div class="clearfix">
-                                            <span class="pull-left">Task #3</span>
-                                            <small class="pull-right">60%</small>
-                                        </div>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-green" style="width: 60%;"></div>
-                                        </div>
-
-                                        <div class="clearfix">
-                                            <span class="pull-left">Task #4</span>
-                                            <small class="pull-right">40%</small>
-                                        </div>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-green" style="width: 40%;"></div>
-                                        </div>
-                                    </div><!-- /.col -->
-                                </div><!-- /.row -->
-                            </div>
-                        </div><!-- /.box -->
-                        <!-- end of calenda -->
+                                        <button class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div><!-- /. tools -->
+                                </div><!-- /.box-header -->
+                                <div class="box-body no-padding">
+                                    <!--The calendar -->
+                                    <div id="calendar" style="width: 100%"></div>
+                                </div><!-- /.box-body -->
+                                <div class="box-footer text-black">
+                                    <div class="row">
+                                        
+                                    </div><!-- /.row -->
+                                </div>
+                            </div><!-- /.box -->
 
 
 
@@ -265,6 +221,8 @@ require('header.php');
                             </div>
                         </div><!-- /.box -->
                         <!-- end of to-do list -->
+
+
                     </div> <!-- end of col RIGHT -->
 
 
@@ -337,9 +295,6 @@ require('footer.php');
 
 
 
-<!-- Morris.js charts -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src='<?=base_url().'assets/js/morris.js'?>'></script>
 <!-- jqeury ui -->
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.js'></script>
 
@@ -349,23 +304,6 @@ require('footer.php');
 
 
 <script type="text/javascript">
-    var line = new Morris.Line({
-        element: 'line-chart',
-        resize: true,
-        data: [
-        {y: '2014 Q3', item1: 12},
-        {y: '2014 Q4', item1: 67},
-        {y: '2015 Q1', item1: 30},
-        {y: '2015 Q2', item1: 70},
-        {y: '2015 Q3', item1: 40},
-        {y: '2015 Q4', item1: 13}
-        ],
-        xkey: 'y',
-        ykeys: ['item1'],
-        labels: ['Item 1'],
-        lineColors: ['#3c8dbc'],
-        hideHover: 'auto'
-    });
 
 
     function initial_to_do_list(){

@@ -22,7 +22,12 @@
 				);
 			$this->db->insert('knowledge', $data_knowledge);
 
-			$knowledge_id = $this->get_knowledge_id($this->input->post('knowledge_description'), $this->session->userdata('email'));
+			//insert file table
+			$knowledge_id = $this->db->insert_id();
+			$this->db->where(array('email'=>$this->session->userdata('email'), 'knowledge_id'=>0));
+			$this->db->update('file_table', array('knowledge_id' => $knowledge_id));
+
+			//$knowledge_id = $this->get_knowledge_id($this->input->post('knowledge_description'), $this->session->userdata('email'));
 			//insert to knowledge_item table
 			$knowledge_item_title_arr = $this->input->post('knowledge_item_title');
 			$knowledge_item_content_arr = $this->input->post('knowledge_item_content');
@@ -838,6 +843,8 @@
 			return $result;
 		}
 
+		
+
 //=================================================================================================================
 //=================================================================================================================
 //																												  #
@@ -1019,23 +1026,8 @@
 			return $this->db->query($query)->result();
 		}
 
-		public function submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_major, $recommendation_target_subject){
+		public function submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_majorsubject_array){
 			//get the recommendation target user list
-				//modify the format of recommendation target list
-			if( !empty($recommendation_target_major)){
-				$recommendation_target_majorsubject_array = array();
-				foreach ($recommendation_target_major as $value) {
-					$value1 = "'".$value."'";
-					array_push($recommendation_target_majorsubject_array, $value1);
-				}
-			}
-
-			if( !empty($recommendation_target_subject)){
-				foreach ($recommendation_target_subject as $value) {
-					$value1 = "'".$value."'";
-					array_push($recommendation_target_majorsubject_array, $value1);
-				}
-			}//end of modify format
 
 			$query_user_list = "
 				SELECT DISTINCT cat_owner

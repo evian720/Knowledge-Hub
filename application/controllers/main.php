@@ -70,8 +70,14 @@ class Main extends CI_Controller {
 	}
 
 	public function teacher_dashboard(){
+		$this->load->model('model_users');
+		$data['students_no'] = $this->model_users->get_students_no_of_teacher($this->session->userdata('email'));
+		$data['knowledge_this_week'] = $this->model_users->get_knowledge_this_week();
+		$data['sharing_times'] = $this->model_users->get_total_sharing_times();
+		$data['no_of_subjects'] = $this->model_users->get_no_of_subjects($this->session->userdata('email'));
+
 		if($this->session->userdata('is_logged_in')){
-			$this->load->view('view_teacher_dashboard');
+			$this->load->view('view_teacher_dashboard', $data);
 		}
 		else{
 			$this->load->view('restricted');
@@ -120,7 +126,8 @@ class Main extends CI_Controller {
 					'user_role' => $this->model_users->get_user_role($this->input->post('email')),
 					'just_login' => 1,
 					'lastname' => $this->model_users->getLastname($this->input->post('email')),
-					'register_date' => $this->model_users->get_register_date($this->input->post('email'))
+					'register_date' => $this->model_users->get_register_date($this->input->post('email')),
+					'file_upload' => array()
 				);
 			
 			$this->session->set_userdata($data);
@@ -746,6 +753,21 @@ class Main extends CI_Controller {
 		$this->model_recommendation->calculate_percentile('evian720@yahoo.com.hk');
 	}
 
+	public function upload() {
+		if (!empty($_FILES)) {
+		$tempFile = $_FILES['file']['tmp_name'];
+		$fileName = $_FILES['file']['name'];
+		$targetPath = getcwd() . '/uploads/';
+		$targetFile = $targetPath . $fileName ;
+		move_uploaded_file($tempFile, $targetFile);
+
+
+		// table in db
+		$this->load->database(); // load database
+		$this->db->insert('file_table', array('id'=> '', 'knowledge_id' => '0', 'file_name' => $fileName, 'email' => $this->session->userdata('email'), 'created_time'=> date("Y-m-d H:i:s")));
+		}
+    }
+
 
 //=================================================================================================================
 //=================================================================================================================
@@ -949,11 +971,30 @@ class Main extends CI_Controller {
 	public function submit_teacher_recommendation(){
 		$recommendation_target_major = $this->input->post('recommendation_target_major');
 		$recommendation_target_subject = $this->input->post('recommendation_target_subject');
+
+		$recommendation_target_majorsubject_array = array();
+		//modify the format of recommendation target list
+		if( !empty($recommendation_target_major)){
+			$recommendation_target_majorsubject_array = array();
+			foreach ($recommendation_target_major as $value) {
+				$value1 = "'".$value."'";
+				array_push($recommendation_target_majorsubject_array, $value1);
+			}
+		}
+		if( !empty($recommendation_target_subject)){
+			foreach ($recommendation_target_subject as $value) {
+				$value1 = "'".$value."'";
+				array_push($recommendation_target_majorsubject_array, $value1);
+			}
+		}//end of modify format
+
 		$recommended_knowledge_id = $this->input->post('recommend_knowledge_id');
 
 		$this->load->model('model_knowledge_management');
-		$this->model_knowledge_management->submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_major, $recommendation_target_subject);
 
+		if(!empty($recommendation_target_majorsubject_array)){
+			$this->model_knowledge_management->submit_teacher_recommendation($recommended_knowledge_id, $recommendation_target_majorsubject_array);
+		}
 
 	}
 

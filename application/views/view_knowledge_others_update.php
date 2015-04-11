@@ -104,8 +104,6 @@
 <!-- for update use -->
 <input type="hidden" id="selected_value_<?php echo $changing; ?>"  value="<?php echo $selected; ?>" />
 
-
-
 <script type="text/javascript">
 $('[data-toggle=confirmation]').confirmation();
 $('[data-toggle=confirmation-singleton]').confirmation({ singleton:true });
@@ -156,6 +154,17 @@ function submit_rating(knowledge_id){
         }
     });
     
+}
+
+function update_knowledge_detail(knowledge_id){
+    $.ajax({
+url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/view_knowledge_detail/" + knowledge_id, //this is the submit URL
+type: 'POST', //or POST
+success: function(data){
+    $('#details').html(data);
+    $('#view_knowledge_detail_button').click();
+}
+});
 }
 
 </script>

@@ -40,16 +40,25 @@
         <script src='<?=base_url().'assets/js/jquery.bootstrap-autohidingnavbar.js'?>'></script>
 
         <!-- data table -->
-        <script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" media="screen">
+        <script src='<?=base_url().'assets/js/jquery.dataTables.min.js'?>'></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/jquery.dataTables.min.css'?>' media="screen">
         <script src='<?=base_url().'assets/datatable/dataTables.bootstrap.js'?>'></script>
-
-        <!-- PNotify -->
-        <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.min.css'?>' media="screen">
-        <script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
 
         <!-- typeahead -->
         <script src='<?=base_url().'assets/js/typeahead.js'?>'></script>
+
+        <!-- editable -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/bootstrap-editable.css'?>' media="screen">
+        <script src='<?=base_url().'assets/js/bootstrap-editable.min.js'?>'></script>
+
+        <!-- dropzone -->
+        <script src='<?=base_url().'assets/js/dropzone.js'?>'></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/dropzone.css'?>' media="screen">
+
+        <!-- PNotify -->
+        <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.css'?>' media="screen">
+        <script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
+
 
     </head>
     <body class="skin-blue fixed">
@@ -95,41 +104,11 @@
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-warning"></i>
-                                <span class="label label-warning">10</span>
+                                <span class="label label-warning">0</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-people info"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-warning danger"></i> Very long description here that may not fit into the page and may cause design problems
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users warning"></i> 5 new members joined
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-cart success"></i> 25 sales made
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="ion ion-ios7-person danger"></i> You changed your username
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                <li class="header"></li>
+                                
                                 <li class="footer"><a href="#">View all</a></li>
                             </ul>
                         </li>
@@ -206,9 +185,6 @@
                             <a href="<?php echo base_url() . 'index.php/main/teacher_knowledge_recommendation' ?>"><i class="fa fa-search"></i> Recommend Knowledge</a>
                         </li>
 
-                        <li>
-                            <a href="javascript:;"><i class="fa fa-bar-chart-o"></i> Statistics</a>
-                        </li>
                     </ul>
                 </section>
                 <!-- /.sidebar -->

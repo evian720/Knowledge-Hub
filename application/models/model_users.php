@@ -231,6 +231,38 @@
 			return $user_access_rights_array;
 		}
 
+		public function get_students_no_of_teacher($email){
+			$this->db->distinct();
+			$this->db->select('user_category.cat_owner');
+			$this->db->from('user_category');
+			$this->db->join('user_access_rights', 'user_category.cat_name = user_access_rights.major');
+			$this->db->where('user_access_rights.email', $email);
+			return $this->db->get()->num_rows();
+		}
+
+		public function get_knowledge_this_week(){
+			$query = "
+				SELECT *
+				FROM knowledge
+				WHERE created_time > NOW() - INTERVAL 4 WEEK
+			";
+			return $this->db->query($query)->num_rows();
+		}
+
+		public function get_total_sharing_times(){
+			return $this->db->get('knowledge_request')->num_rows();
+		}
+
+		public function get_no_of_subjects($email){
+			$this->db->select('cat2.cat_name');
+			$this->db->from('user_access_rights');
+			$this->db->join('category cat1', 'user_access_rights.major = cat1.cat_name');
+			$this->db->join('category cat2', 'cat1.cat_id = cat2.parent_id');
+			$this->db->where('user_access_rights.email', $email);
+			return $this->db->get()->num_rows();
+
+		}
+
 
 //=================================================================================================================
 //=================================================================================================================

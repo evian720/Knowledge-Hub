@@ -4,7 +4,8 @@
 <?php
 require('header.php');
 ?>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src='<?=base_url().'assets/js/d3.v3.min.js'?>'></script>
+
 <!-- PNotify -->
 <link rel="stylesheet" href='<?=base_url().'assets/css/pnotify.custom.css'?>' media="screen">
 <script src='<?=base_url().'assets/js/pnotify.js'?>'></script>
@@ -51,8 +52,9 @@ require('header.php');
 
 </style>
 
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+
+<script src='<?=base_url().'assets/js/bootstrap-toggle.min.js'?>'></script>
+<link rel="stylesheet" href='<?=base_url().'assets/css/bootstrap-toggle.min.css'?>' media="screen">
 
             <!-- loading.... -->
             <div class="modal js-loading-bar">

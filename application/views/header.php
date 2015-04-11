@@ -4,11 +4,8 @@
         <meta charset="UTF-8">
         <title>Knowledge Hub</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href='<?=base_url().'bootstrap/css/bootstrap.min.css'?>' media="screen">
         <link rel="stylesheet" href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' media="screen">
-        <!-- Ionicons
-        <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-        -->
 
         <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
 
@@ -26,9 +23,10 @@
 
 
         <!-- jQuery 2.0.2 -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src='<?=base_url().'assets/js/jquery.min.js'?>'></script>
+
         <!-- Bootstrap -->
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src='<?=base_url().'bootstrap/js/bootstrap.min.js'?>'></script>
 
         <!-- AdminLTE App -->
         <script src='<?=base_url().'assets/js/adminLTEapp.js'?>'></script>
@@ -41,16 +39,21 @@
         <script src='<?=base_url().'assets/js/jquery.bootstrap-autohidingnavbar.js'?>'></script>
 
         <!-- data table -->
-        <script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" media="screen">
+        <script src='<?=base_url().'assets/js/jquery.dataTables.min.js'?>'></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/jquery.dataTables.min.css'?>' media="screen">
         <script src='<?=base_url().'assets/datatable/dataTables.bootstrap.js'?>'></script>
 
         <!-- typeahead -->
         <script src='<?=base_url().'assets/js/typeahead.js'?>'></script>
 
         <!-- editable -->
-        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/bootstrap-editable.css'?>' media="screen">
+        <script src='<?=base_url().'assets/js/bootstrap-editable.min.js'?>'></script>
+
+        <!-- dropzone -->
+        <script src='<?=base_url().'assets/js/dropzone.js'?>'></script>
+        <link rel="stylesheet" href='<?=base_url().'assets/css/dropzone.css'?>' media="screen">
+
 
 
     </head>

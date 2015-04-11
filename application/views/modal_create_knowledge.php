@@ -1,7 +1,7 @@
 
 
     <link rel="stylesheet" href='<?=base_url().'assets/css/gsdk-base-new.css'?>' media="screen">
-    <script src='<?=base_url().'bootstrap/js/bootstrapValidator.js'?>'></script>
+    <script src='<?=base_url().'bootstrap/js/bootstrapValidator.min.js'?>'></script>
 
     <script src='<?=base_url().'assets/js/jquery.bootstrap.wizard.js'?>'></script>
     <script src='<?=base_url().'assets/js/wizard.js'?>'></script>
@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href='<?=base_url().'assets/css/bootstrap3-wysihtml5.min.css'?>' media="screen">
     <script src='<?=base_url().'assets/js/bootstrap3-wysihtml5.all.min.js'?>'></script>
+    
 
 
 
@@ -28,6 +29,7 @@
           <li><a href="#basic_info" data-toggle="tab">Basic Information</a></li>
           <li><a href="#category" data-toggle="tab">Category</a></li>
           <li><a href="#item" data-toggle="tab">Knowledge Item</a></li>
+          <li><a href="#attachment" data-toggle="tab">Attachment</a></li>
         </ul>
 
         <!-- basic information section -->
@@ -210,7 +212,6 @@
               </div>
             </div>
 
-
           </div>
 
 
@@ -263,6 +264,24 @@
           </div><!-- end of template -->
 
 
+          <div class="tab-pane" id="attachment">
+            <h4 class="info-text"> Do you have some materials to attach? e.g. lecture notes, readings, and etc.</h4>
+              <div class="row">
+              <div class="col-sm-10 col-sm-offset-1">
+                <div id="dropzone" class="dropzone">
+                  <div class="dz-message">
+                    Drop files here or click to upload.<br />
+                    <span class="note">(You might select multiple files here.)</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+
+          </div>
+
+
         </div> <!-- end of table-centent-->
 
 
@@ -281,7 +300,12 @@
     </form>
     <!--</div> wizard container -->
 
-
+    <div id="preview-template" style="display: none;">
+      <div class="dz-message">
+      Drop files here or click to upload.<br />
+      <span class="note">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+    </div>
+    </div>
 
 <script type="text/javascript">
 $('#knowledge_desc').wysihtml5();
@@ -617,6 +641,13 @@ function unique(obj){
     }
     return uniques;
 }
+
+
+Dropzone.autoDiscover = false;
+
+var myDropzone = new Dropzone(".dropzone", {
+  url: "/fyp/knowledge_hub/index.php/main/upload"
+});
 
 
 </script>
