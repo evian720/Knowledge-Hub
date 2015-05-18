@@ -196,9 +196,6 @@
                             <a href="<?php echo base_url() . 'index.php/main/admin_category_management' ?>"><i class="fa fa-book"></i> Category Management</a>
                         </li>
 
-                        <li>
-                            <a href="javascript:;"><i class="fa fa-bar-chart-o"></i> Statistics</a>
-                        </li>
                     </ul>
                 </section>
                 <!-- /.sidebar -->

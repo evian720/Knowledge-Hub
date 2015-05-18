@@ -62,7 +62,7 @@ require('view_admin_header.php');
                                                 <td>' . $row->email . '</td>
                                                 <td><a href="#" class="edit_first_name" data-type="text" data-pk="' . $row->email . '" >' . $row->first_name . '</a></td>
                                                 <td><a href="#" class="edit_last_name" data-type="text" data-pk="' . $row->email . '" >' . $row->last_name . '</a></td>
-                                                <td><a href="#" class="edit_user_role" data-type="select" data-pk="' . $row->email . '" data-value="2" data-source="' . $select_data_source .'" >' . $row->user_role . '</a></td>
+                                                <td><a href="#" class="edit_user_role" data-type="select" data-pk="' . $row->email . '" data-source="' . $select_data_source .'" >' . $row->user_role . '</a></td>
                                                 <td>' . $user_rights . ' <a style="float: right" class="btn btn-danger btn-flat btn-xs" onclick="modify_cat_access(\''.$row->user_id.'\');"><i class="fa fa-pencil-square-o"></i></a></td>
                                             </tr>
                                             ';

@@ -187,6 +187,15 @@
 			return $percentile*10;
 		}
 
+		public function get_teacher_choice_knowledge($email){
+			$this->db->select("*");
+			$this->db->from("knowledge");
+			$this->db->join("recommendation", "knowledge.knowledge_id = recommendation.knowledge_id");
+			$this->db->where('knowledge.user_name <>', $email);
+			$this->db->where('knowledge.teacher_recommended', '1');
+			return $this->db->get()->result();
+		}
+
 
 	}//end of the class
 

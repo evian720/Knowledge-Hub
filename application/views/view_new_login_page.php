@@ -337,28 +337,28 @@
 		<div style="padding-top: 50px;text-align: center; width: 95%;">
 				<div class="col-md-2 col-md-offset-2">
 					<p style="color: #5bb75b;"><i class="fa fa-user"></i></p>
-					<h1>349</h1>
+					<h1>8</h1>
 					<hr>
 					<h4>users</h4>
 				</div>		
 
 				<div class="col-md-2">
 					<p style="color: #5bb75b;"><i class="fa fa-cloud"></i></p>
-					<h1>8</h1>
+					<h1>2</h1>
 					<hr>
 					<h4>area</h4>
 				</div>
 
 				<div class="col-md-2">
 					<p style="color: #5bb75b;"><i class="fa fa-graduation-cap"></i></p>
-					<h1>61</h1>
+					<h1>5</h1>
 					<hr>
 					<h4>major</h4>
 				</div>
 
 				<div class="col-md-2">
 					<p style="color: #5bb75b;"><i class="fa fa-file-pdf-o"></i></p>
-					<h1>2,988</h1>
+					<h1>15</h1>
 					<hr>
 					<h4>knowledge</h4>
 				</div>
@@ -384,7 +384,7 @@
 						<span> <?php echo $hottest_knowledge[0]->knowledge_title; ?> </span>
 					</div>
 					<div class="widget-content" style="height: 100px;">
-						<p style="color: black;"><?php echo $hottest_knowledge[0]->knowledge_description; ?></p>
+						<p style="color: black; line-height: 1.5em; height: 4.5em; overflow: hidden;" ><?php echo $hottest_knowledge[0]->knowledge_description; ?></p>
 						<button class="btn btn-success btn-sm pull-right">Details</button>
 					</div>
 				</div>
@@ -394,7 +394,7 @@
 						<span> <?php echo $hottest_knowledge[1]->knowledge_title; ?> </span>
 					</div>
 					<div class="widget-content" style="height: 100px;">
-						<p style="color: black;"> <?php echo $hottest_knowledge[1]->knowledge_description; ?> </p>
+						<p style="color: black; line-height: 1.5em; height: 4.5em; overflow: hidden;"> <?php echo $hottest_knowledge[1]->knowledge_description; ?> </p>
 						<button class="btn btn-success btn-sm pull-right" style="bottom: 0;">Details</button>
 					</div>
 				</div>

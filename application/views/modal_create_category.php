@@ -101,7 +101,7 @@ $('#selected_area1').change(function(){
         + '</option>');
     }
 
-    //update subject
+    //update major
     $("#selected_major1 > option").remove();
     var area_name = $('#selected_area1').val();
     $.ajax({
@@ -172,7 +172,7 @@ $('#selected_major1').change(function(){
     });
         var opt2 = $('<option />');
         opt2.text('- Cannot find your subject? -');
-        $('#selected_subject').append(opt2);
+        $('#selected_subject1').append(opt2);
       },
       error: function(){
         var opt1 = $('<option />');

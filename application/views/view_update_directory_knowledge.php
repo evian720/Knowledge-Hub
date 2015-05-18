@@ -14,6 +14,11 @@
                 ' . $knowledge->knowledge_description . '
             </p>
           </div><!-- /.box-body -->
+          <div class="box-footer">
+              <div clss="pull-right">
+                  <a class="btn btn-primary btn-xs" onclick="update_knowledge_detail( ' . $knowledge->knowledge_id . ' )">Details</a>
+              </div>   
+          </div><!-- /.box-footer-->
         </div><!-- /.box -->
       </div><!-- /.col -->
     ';

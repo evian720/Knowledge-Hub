@@ -308,6 +308,23 @@
 			}
 		}
 
+		public function get_total_students_no(){
+			return $this->db->get_where('user', array('user_role'=>'student'))->num_rows();
+		}
+
+		public function get_total_teachers_no(){
+			return $this->db->get_where('user', array('user_role'=>'teacher'))->num_rows();
+		}
+
+		public function get_total_knowledge_no(){
+			return $this->db->get('knowledge')->num_rows();
+		}
+
+		public function get_total_category_no(){
+			return $this->db->get('category')->num_rows();
+		}
+
+
 	}
 
 ?>

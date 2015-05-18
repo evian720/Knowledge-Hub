@@ -220,6 +220,7 @@
                 <!-- /.sidebar -->
             </aside>
 
+            <button type="button" id="create_new_knowledge_button" class="btn btn-primary btn-sm hidden" data-toggle="modal" data-target="#create_new_knowledge"></button>
             <!-- modal for create knowledge -->
             <div class="modal fade" id="create_new_knowledge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog" style="width: 95%;">

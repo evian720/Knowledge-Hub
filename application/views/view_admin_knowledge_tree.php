@@ -2,7 +2,7 @@
 <html lang="en">
 
 <?php
-require('header.php');
+require('view_admin_header.php');
 ?>
 <script src='<?=base_url().'assets/js/d3.v3.min.js'?>'></script>
 
@@ -577,7 +577,7 @@ new PNotify({
         history: false
     },
     sticker: false,
-    delay: 4000
+    delay: 8000
 });
 
 

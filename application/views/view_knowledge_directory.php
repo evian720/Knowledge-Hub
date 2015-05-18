@@ -53,9 +53,8 @@ require('header.php');
                                                 <td>' . $row->level4_cat . '</td>
                                                 <td class="action-col">
                                                     <span class="btn-group">
-                                                        <a href="#" class="btn btn-small"><i class="fa fa-search"></i></a>
-                                                        <a href="#" class="btn btn-small"><i class="fa fa-paint-brush"></i></a>
-                                                        <a href="#" class="btn btn-small"><i class="fa fa-plus"></i></a>
+                                                        <a href="#" class="btn btn-small" onclick="update_knowledge_detail(\''.$row->knowledge_id.'\')"><i class="fa fa-search"></i></a>
+                                                        <a href="#" class="btn btn-small"><i class="fa fa-paper-plane"></i></a>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -92,25 +91,36 @@ require('footer.php');
 
             //column search
             $(document).ready(function() {
-            // Setup - add a text input to each footer cell
-            $('#knowledge_directory_table tfoot th').each( function () {
-                var title = $('#knowledge_directory_table thead th').eq( $(this).index() ).text();
-                $(this).html( '<input type="text" style="width:100px" placeholder="'+title+'" />' );
-            } );
+                // Setup - add a text input to each footer cell
+                $('#knowledge_directory_table tfoot th').each( function () {
+                    var title = $('#knowledge_directory_table thead th').eq( $(this).index() ).text();
+                    $(this).html( '<input type="text" style="width:100px" placeholder="'+title+'" />' );
+                } );
 
-            // DataTable
-            var table = $('#knowledge_directory_table').DataTable();
+                // DataTable
+                var table = $('#knowledge_directory_table').DataTable();
 
             // Apply the search
-            table.columns().eq( 0 ).each( function ( colIdx ) {
-                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
-                    table
-                    .column( colIdx )
-                    .search( this.value )
-                    .draw();
-                } );
-            } );
-            } );
+                table.columns().eq( 0 ).each( function ( colIdx ) {
+                    $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+                        table
+                        .column( colIdx )
+                        .search( this.value )
+                        .draw();
+                    });
+                });
+            })
+
+            function update_knowledge_detail(knowledge_id){
+                $.ajax({
+                    url: "http://101.78.175.101:8580/fyp/knowledge_hub/index.php/main/view_knowledge_detail/" + knowledge_id, //this is the submit URL
+                    type: 'POST', //or POST
+                    success: function(data){
+                        $('#details').html(data);
+                        $('#view_knowledge_detail_button').click();
+                    }
+                });
+            }
 
         </script>
 

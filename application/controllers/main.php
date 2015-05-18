@@ -59,7 +59,7 @@ class Main extends CI_Controller {
 		$data['user_stat_focusing_subject'] = $this->model_users->get_user_stat_focusing_subject($this->session->userdata('email'));
 		$data['user_stat_reputation'] = $this->model_users->get_user_stat_reputation($this->session->userdata('email'));
 		$this->load->model('model_recommendation');
-		$data['user_stat_ranking'] = $this->model_recommendation->calculate_percentile($this->session->userdata('email'))*10;
+		$data['user_stat_ranking'] = round($this->model_recommendation->calculate_percentile($this->session->userdata('email'))*10);
 
 		if($this->session->userdata('is_logged_in')){
 			$this->load->view('view_dashboard', $data);
@@ -75,6 +75,7 @@ class Main extends CI_Controller {
 		$data['knowledge_this_week'] = $this->model_users->get_knowledge_this_week();
 		$data['sharing_times'] = $this->model_users->get_total_sharing_times();
 		$data['no_of_subjects'] = $this->model_users->get_no_of_subjects($this->session->userdata('email'));
+		$data['to_do_list'] = $this->model_knowledge_management->get_to_do_list($this->session->userdata('email'));
 
 		if($this->session->userdata('is_logged_in')){
 			$this->load->view('view_teacher_dashboard', $data);
@@ -85,8 +86,15 @@ class Main extends CI_Controller {
 	}
 
 	public function admin_dashboard(){
+		$this->load->model('model_users');
+		$data['students_no'] = $this->model_users->get_total_students_no();
+		$data['teachers_no'] = $this->model_users->get_total_teachers_no();
+		$data['knowledge_no'] = $this->model_users->get_total_knowledge_no();
+		$data['category_no'] = $this->model_users->get_total_category_no();
+		$data['to_do_list'] = $this->model_knowledge_management->get_to_do_list($this->session->userdata('email'));
+
 		if($this->session->userdata('is_logged_in')){
-			$this->load->view('view_admin_dashboard');
+			$this->load->view('view_admin_dashboard', $data);
 		}
 		else{
 			$this->load->view('restricted');
@@ -401,6 +409,7 @@ class Main extends CI_Controller {
 		$this->load->model('model_knowledge_management');
 		$data['knowledge'] = $this->model_knowledge_management->get_knowledge_by_id($knowledge_id);
 		$data['knowledge_items'] = $this->model_knowledge_management->get_knowledge_item($knowledge_id);
+		$data['attachments'] = $this->model_knowledge_management->get_knowledge_attachment($knowledge_id);
 		$this->load->view('modal_knowledge_details', $data);
 	}
 
@@ -768,6 +777,15 @@ class Main extends CI_Controller {
 		}
     }
 
+    public function submit_new_knowledge_item(){
+    	$new_knowledge_item_title = $this->input->post('new_knowledge_item_title');
+    	$new_knowledge_item_content = $this->input->post('new_knowledge_item_content');
+    	$knowledge_id = $this->input->post('knowledge_id_for_new_item');
+
+    	$this->load->model('model_knowledge_management');
+    	$this->model_knowledge_management->new_knowledge_item($knowledge_id, $new_knowledge_item_title, $new_knowledge_item_content);
+    }
+
 
 //=================================================================================================================
 //=================================================================================================================
@@ -998,6 +1016,17 @@ class Main extends CI_Controller {
 
 	}
 
+	public function download_file($id){
+		$this->load->model('model_knowledge_management');
+		$file_name = $this->model_knowledge_management->get_attachment_name_by_id($id);
+		$file_name1 = str_replace(" ", "%20", $file_name);
+		$this->load->helper('download');
+		$file_path = $this->config->item('base_url') . "uploads/" . $file_name1;
+        $data = file_get_contents($file_path);
+
+        force_download($file_name, $data);
+	}
+
 
 
 
@@ -1062,6 +1091,12 @@ class Main extends CI_Controller {
 		$this->model_users->submit_user_access_rights($email, $new_access_rights);
 	}
 
+	public function view_admin_knowledge_tree(){
+		$this->load->model('model_knowledge_management');
+		if($this->model_knowledge_management->gen_admin_tree($this->session->userdata('email')) == true)
+			$this->load->view('view_knowledge_tree');
+	}
+
 
 
 
@@ -1092,6 +1127,8 @@ class Main extends CI_Controller {
 
 		$this->load->model('model_knowledge_management');
 		$data['hottest_knowledge'] = $this->model_knowledge_management->get_hottest_knowledge_for_recommendation();
+
+		$data['teacher_choice'] = $this->model_recommendation->get_teacher_choice_knowledge($this->session->userdata('email'));
 		
 		$this->load->view('view_recommendation', $data);
 

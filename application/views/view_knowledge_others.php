@@ -82,7 +82,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-green">
                                                     <div class="inner">
-                                                        <h3>153</h3>
+                                                        <h3>8</h3>
                                                         <p>Users</p>
                                                     </div>
                                                     <div class="icon">
@@ -97,7 +97,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-yellow">
                                                     <div class="inner">
-                                                        <h3>44</h3>
+                                                        <h3>4</h3>
                                                         <p>New Knowledge Today</p>
                                                     </div>
                                                     <div class="icon">
@@ -112,7 +112,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-red">
                                                     <div class="inner">
-                                                        <h3>785</h3>
+                                                        <h3>12</h3>
                                                         <p>Total Knowledge</p>
                                                     </div>
                                                     <div class="icon">
@@ -281,7 +281,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-green">
                                                     <div class="inner">
-                                                        <h3>121</h3>
+                                                        <h3>6</h3>
                                                         <p>Users</p>
                                                     </div>
                                                     <div class="icon">
@@ -296,7 +296,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-yellow">
                                                     <div class="inner">
-                                                        <h3>21</h3>
+                                                        <h3>4</h3>
                                                         <p>New Knowledge/Day</p>
                                                     </div>
                                                     <div class="icon">
@@ -311,7 +311,7 @@ require('header.php');
                                                 <!-- small box -->
                                                 <div class="small-box bg-red">
                                                     <div class="inner">
-                                                        <h3>421</h3>
+                                                        <h3>12</h3>
                                                         <p>Total Knowledge</p>
                                                     </div>
                                                     <div class="icon">

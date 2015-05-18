@@ -18,6 +18,7 @@
 					'level4_cat' => $this->input->post('selected_chapter'),
 					'orignal_knowledge_id' => '',
 					'reference_knowledge_id' => '',
+					'teacher_recommended' => '',
 					'created_time' => date("Y-m-d H:i:s")
 				);
 			$this->db->insert('knowledge', $data_knowledge);
@@ -287,9 +288,20 @@
 
 		public function delete_knowledge_from_db($knowledge_id, $user_name){
 
+			$subject_id = $this->db->get_where('knowledge_cat', array('knowledge_id'=>$knowledge_id))->row()->cat_id;
+			$subject_count = $this->db->get_where('knowledge_cat', array('cat_id'=>$subject_id))->num_rows();
+			if($subject_count == 1 ){
+				$this->db->where('cat_id', $subject_id);
+				$this->db->delete('user_category');
+			}
+
 			//delete user_knowledge
 			$this->db->where(array('knowledge_id' => $knowledge_id, 'user_name' => $user_name));
 			$this->db->delete('knowledge');
+
+			//delete knowledge_tiems
+			$this->db->where('knowledge_id', $knowledge_id);
+			$this->db->delete('knowledge_item');
 
 			//update knowledge table
 			$this->db->where('knowledge_id', $knowledge_id);
@@ -649,6 +661,7 @@
 							'level4_cat' => $knowledge_to_copy->level4_cat,
 							'orignal_knowledge_id' => $knowledge_to_copy->knowledge_id,
 							'reference_knowledge_id' => 'NULL',
+							'teacher_recommended' => '',
 							'created_time' => date("Y-m-d H:i:s")
 						);
 				$this->db->insert('knowledge', $knowledge_for_new_user);
@@ -843,6 +856,27 @@
 			return $result;
 		}
 
+		public function get_knowledge_attachment($knowledge_id){
+			return $this->db->get_where('file_table', array('knowledge_id'=>$knowledge_id))->result();
+		}
+
+		public function get_attachment_name_by_id($id){
+			return $this->db->get_where('file_table', array('id'=>$id))->row()->file_name;
+		}
+
+		public function new_knowledge_item($knowledge_id, $new_knowledge_item_title, $new_knowledge_item_content){
+			$data = array(
+					'knowledge_item_id' => '',
+					'knowledge_id' => $knowledge_id,
+					'knowledge_item_title' => $new_knowledge_item_title,
+					'knowledge_item_content' => $new_knowledge_item_content,
+					'created_time' => date("Y-m-d H:i:s")
+				);
+
+			$this->db->insert('knowledge_item', $data);
+		}
+
+
 		
 
 //=================================================================================================================
@@ -977,7 +1011,7 @@
 
 		public function update_knowledge($knowledge_id, $new_value, $edit_field){
 			$this->db->where('knowledge_id', $knowledge_id);
-			$this->db->update('knowledge', array('knowledge_title' => $new_value));
+			$this->db->update('knowledge', array($edit_field => $new_value));
 		}
 
 
@@ -1064,11 +1098,37 @@
 			}
 
 
-
+			//update the knowledge table teacher recommended column
+			$this->db->where('knowledge_id', $recommended_knowledge_id);
+			$this->db->update('knowledge', array('teacher_recommended'=>1));
 
 			print_r($user_list);
 			echo $recommended_knowledge_id;
 			//print_r(implode(',', $recommendation_target_majorsubject_array));
+
+		}
+
+
+
+
+
+
+
+
+		public function gen_admin_tree($email){
+			mysql_connect('localhost', 'root', 'x63561628');
+		    mysql_select_db('login_1026');
+
+		    $categories = Category::getTopCategories($email);
+		    //print_r($categories);
+		    $str = json_encode($categories);
+		    $str1 = ltrim ($str, '[');
+		    $str2 = rtrim($str1, "]");
+
+		    $file = "json/" . $email . ".json";
+		    file_put_contents($file, $str2);
+
+		    return true;
 
 		}
 
